@@ -17,8 +17,8 @@ struct InsertionInfo{
 
 InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
-  custoInsercao= std::vector<InsertionInfo> custoInsercao ((s.size()-1)
-    *CL.size());
+  custoInsercao= std::vector<InsertionInfo> custoInsercao ((s.size()-1) * CL.size());
+
   int l= 0;
 
   for(int a= 0; b= 1; i < s.size() - 1; a++, b++){
@@ -31,7 +31,7 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
       custoInsercao[l].arestaRemovida= a;
       l++;
     }
-    
+
   }
   return custoInsercao;
 }
