@@ -24,12 +24,14 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
   for(int a= 0; b= 1; i < s.size() - 1; a++, b++){
     int i= s.sequence[a];
     int j= s.sequence[b];
+
     for (auto k : CL){
       custoInsercao[l].custo= c[i][k] + c[j][k] - c[i][j];
       custoInsercao[l].noInserido= k;
       custoInsercao[l].arestaRemovida= a;
       l++;
     }
+    
   }
   return custoInsercao;
 }
