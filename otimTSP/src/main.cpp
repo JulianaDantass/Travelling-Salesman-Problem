@@ -41,7 +41,7 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 Solution Construcao(){
   
   Solution s;
-  int numRandom, i, j, quant;
+  int numRandom, i, j, quant, aux;
 
   s.sequence.push_back(1);
   s.sequence.push_back(1);      //adicionando a cidade 1
@@ -55,7 +55,7 @@ Solution Construcao(){
     s.sequence.insert(s.sequence.end()-1, numRandom);
 
     j= 0;
-    while(1){
+    while(1){           //retirar cidades aleatorias da lista de candidatos
       if(numRandom == CL[j]){
         CL.erase(CL.begin()+j);
         break;
@@ -66,7 +66,18 @@ Solution Construcao(){
   
   while(!CL.empty()){
     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
-    ordenarEmOrdemCrescente(custoInsercao);
+
+    for(i= 0; i < custoInsercao.size(); i++){               //ordernar os custos
+      for(j= 0; j < custoInsercao.size()-1; j++){
+
+        if(custoInsercao[j] > custoInsercao[j+1]){
+          aux= custoInsercao[j];
+          custoInsercao[j]= custoInsercao[j+1]; 
+          custoInsercao[j+1]= aux; 
+        }
+      }
+    }
+
     double alpha= (double) rand() / RAND_MAX;
     int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
     inserirNaSolucao(s, selecionado);
