@@ -1,6 +1,8 @@
 #include "readData.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -39,15 +41,26 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 Solution Construcao(){
   
   Solution s;
-  s.sequence= escolher3NosAleatorios();
+  int numRandom, i, quant;
 
+  s.sequence.push_back(1);
+  s.sequence.push_back(1);      //adicionando a cidade 1
+  CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
+
+  for(i= 1; i <= 3; i++){             //funcao para escolher 3 cidades aleatorias
+    srand(time(0));
+    quant= CL.size();
+    numRandom= 1+rand()% CL[quant-1];
+    s.sequence.insert(s.sequence.end()-1, numRandom);
+  }
+  
   std::vector<int> CL= nosRestantes();
 
   while(!CL.empty()){
     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
     ordenarEmOrdemCrescente(custoInsercao);
     double alpha= (double) rand() / RAND_MAX;
-    int selecionado= rand() % ((int) ceil(alpha * custoInsercao.size()));
+    int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
     inserirNaSolucao(s, selecionado);
   }
 }
