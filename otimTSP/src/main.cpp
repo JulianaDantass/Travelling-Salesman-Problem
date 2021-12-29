@@ -43,19 +43,19 @@ Solution Construcao(){
   Solution s;
   int numRandom, i, j, quant, aux;
 
-  s.sequence.push_back(1);
-  s.sequence.push_back(1);      //adicionando a cidade 1
+  s.sequence.push_back(1);      //adicionando a cidade 1 no inicio
+  s.sequence.push_back(1);      //adicionando a c1 no final
   CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
     std::vector<int> CL;
     srand(time(0));
     quant= CL.size();
-    numRandom= 1+rand()% CL[quant-1];
+    numRandom= 2+rand()% CL[quant-1];      //gera numeros aleatorios entre 2 e o numero do penultimo elem. do CL
     s.sequence.insert(s.sequence.end()-1, numRandom);
 
     j= 0;
-    while(1){           //retirar cidades aleatorias da lista de candidatos
+    while(1){           //retirar cidades escolhidas aleatoriamente da lista de candidatos
       if(numRandom == CL[j]){
         CL.erase(CL.begin()+j);
         break;
