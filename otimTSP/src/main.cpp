@@ -84,6 +84,35 @@ Solution Construcao(){
   }
 }
 
+bool BestImprovementSwap (Solution *s){
+
+  double bestDelta= 0;
+  int best_i, best_j;
+  int i, j;
+
+  for(i= 1; i < s->sequence.size() - 1; i++) {
+    for (j= i + 1; j < s->sequence.size() - 1; j++){
+      
+      double delta= calculateSwapCost(i, j);
+
+      if(delta < bestDelta){
+        bestDelta= delta;
+        best_i= i;
+        best_j= j;
+      }
+    }
+  }
+
+  if (bestDelta < 0){
+    std::swap(s->sequence[best_i], s->sequence[best_j]);
+    s->cost= s-> cost - delta;
+    return true;
+  }
+
+  return false;
+}
+
+
 int main(int argc, char** argv) {
 
     readData(argc, argv, &dimension, &matrizAdj);
