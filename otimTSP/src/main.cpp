@@ -84,6 +84,16 @@ Solution Construcao(){
 
     double alpha= (double) rand() / RAND_MAX;
     int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
+
+    j= 0;
+    while(1){           
+      if(selecionado == CL[j]){
+        CL.erase(CL.begin()+j);
+        break;
+      }
+      j++;
+    }
+
     s.sequence.insert(s.sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
   }
 
