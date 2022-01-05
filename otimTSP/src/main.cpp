@@ -17,6 +17,10 @@ struct InsertionInfo{
     double custo;
 };
 
+struct Solution{
+    std::vector<int> sequence;
+};
+
 InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
   custoInsercao= std::vector<InsertionInfo> custoInsercao ((s.size()-1) * CL.size());
@@ -51,7 +55,7 @@ Solution Construcao(){
     std::vector<int> CL;
     srand(time(0));
     quant= CL.size();
-    numRandom= CL[0]+rand()% CL[quant-1];      //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. da CL
+    numRandom= CL[0]+rand()% CL[quant-1];      //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
     s.sequence.insert(s.sequence.end()-1, numRandom);
 
     j= 0;
@@ -80,8 +84,9 @@ Solution Construcao(){
 
     double alpha= (double) rand() / RAND_MAX;
     int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
-    inserirNaSolucao(s, selecionado);
+    s.sequence.insert(s.sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
   }
+
 }
 
 bool BestImprovementSwap (Solution *s){
