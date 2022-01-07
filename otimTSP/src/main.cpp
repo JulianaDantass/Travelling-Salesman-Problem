@@ -19,6 +19,7 @@ struct InsertionInfo{
 
 struct Solution{
     std::vector<int> sequence;
+    double custoSolucao;
 };
 
 InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
@@ -97,6 +98,11 @@ Solution Construcao(){
     s.sequence.insert(s.sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
   }
 
+  for(i= 0; i < s.sequence.size()-1; i++){        //calcular o custo do tour solução
+
+    s.custoSolucao += matrizAdj[i][i+1];        
+  }
+  
 }
 
 bool BestImprovementSwap (Solution *s){
