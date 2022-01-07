@@ -110,11 +110,14 @@ bool BestImprovementSwap (Solution *s){
   double bestDelta= 0;
   int best_i, best_j;
   int i, j;
+  double custoSwap;
 
   for(i= 1; i < s->sequence.size() - 1; i++) {
     for (j= i + 1; j < s->sequence.size() - 1; j++){
       
-      double delta= calculateSwapCost(i, j);
+      custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
+
+      double delta= s->custoSolucao - custoSwap;
 
       if(delta < bestDelta){
         bestDelta= delta;
