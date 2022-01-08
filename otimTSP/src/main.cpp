@@ -33,7 +33,7 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
     int j= s.sequence[b];
 
     for (auto k : CL){
-      custoInsercao[l].custo= c[i][k] + c[j][k] - c[i][j];
+      custoInsercao[l].custo= matrizAdj[i][k] + matrizAdj[j][k] - matrizAdj[i][j];
       custoInsercao[l].noInserido= k;
       custoInsercao[l].arestaRemovida= a;
       l++;
@@ -129,7 +129,7 @@ bool BestImprovementSwap (Solution *s){
 
   if (bestDelta < 0){
     std::swap(s->sequence[best_i], s->sequence[best_j]);
-    s->cost= s-> cost - delta;
+    s->custoSolucao= s->custoSolucao - delta;
     return true;
   }
 
