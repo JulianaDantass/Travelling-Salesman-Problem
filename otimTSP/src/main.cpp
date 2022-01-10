@@ -136,6 +136,43 @@ bool BestImprovementSwap (Solution *s){
   return false;
 }
 
+void BuscaLocal (Solution *s){
+
+  std::vector<int>NL= {1, 2, 3, 4, 5};
+
+  bool improved= false;
+
+  while(NL.empty() == false){
+
+    int n= rand() % NL.size;
+
+    switch (NL(n)) {
+      case 1: 
+        improved= BestImprovementSwap(s);
+        break;
+      case 2: 
+        improved= BestImprovement20pt(s);
+        break;
+      case 3:
+        improved= BestImprovementOrOpt(s, 1);   //reinsertion
+        break;
+      case 4:
+        improved= BestImprovementOrOpt(s, 2);   //Or-opt2
+        break;
+      case 4:
+        improved= BestImprovementOrOpt(s, 3);   //Or-opt3
+        break;
+    }
+
+    if(improved){
+      NL= {1, 2, 3, 4, 5};
+
+    }else{
+      NL.erase(NL.begin() + n);
+    }
+
+  } 
+}
 
 int main(int argc, char** argv) {
 
