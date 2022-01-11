@@ -136,6 +136,43 @@ bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP
   return false;
 }
 
+bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt 
+
+  double bestDelta= 0;
+  int best_i, best_j;
+  int i, j;
+  double custoSwap;
+
+  for(i= 1; i < s->sequence.size() - 1; i++) {
+    for (j= i + 2; j < s->sequence.size() - 1; j++){
+      
+      custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
+
+      double delta= s->custoSolucao - custoSwap;
+
+      if(delta < bestDelta){
+        bestDelta= delta;
+        best_i= i;
+        best_j= j;
+      }
+    }
+  }
+
+  if (bestDelta < 0){
+
+    j= best_j;
+    for(i= best_i; i < j; i++){               //for para inverter a subsequencia obtida anteriormente
+      std::swap(s->sequence[i], s->sequence[j]);
+      j--;
+    }
+    s->custoSolucao= s->custoSolucao - delta;
+    
+    return true;
+  }
+
+  return false;
+  
+}
 
 void BuscaLocal (Solution *s){
 
