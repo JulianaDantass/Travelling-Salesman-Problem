@@ -105,7 +105,7 @@ Solution Construcao(){
   
 }
 
-bool BestImprovementSwap (Solution *s){
+bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP 
 
   double bestDelta= 0;
   int best_i, best_j;
@@ -136,6 +136,7 @@ bool BestImprovementSwap (Solution *s){
   return false;
 }
 
+
 void BuscaLocal (Solution *s){
 
   std::vector<int>NL= {1, 2, 3, 4, 5};
@@ -151,7 +152,7 @@ void BuscaLocal (Solution *s){
         improved= BestImprovementSwap(s);
         break;
       case 2: 
-        improved= BestImprovement20pt(s);
+        improved= BestImprovement2Opt(s);
         break;
       case 3:
         improved= BestImprovementOrOpt(s, 1);   //reinsertion
