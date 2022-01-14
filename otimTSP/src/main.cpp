@@ -170,8 +170,47 @@ bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt
     return true;
   }
 
-  return false;
-  
+  return false; 
+}
+
+bool BestImprovementOrOpt (Solution *s, int quantity){         
+
+  double bestDelta= 0;
+  int best_i, best_j;
+  int i, j;
+  double custoSwap;
+
+  switch(quantity){
+    
+    case 1:             //método: REINSERTION
+
+      for(i= 1; i < s->sequence.size() - 1; i++) {
+        for (j= i + 1; j < s->sequence.size() - 1; j++){
+          
+          custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i][i+1] - matrizAdj[j][j+1] + matrizAdj[i-1][i+1] + matrizAdj[i][j] + matrizAdj[i][j+1];
+
+          double delta= s->custoSolucao - custoSwap;
+
+          if(delta < bestDelta){
+            bestDelta= delta;
+            best_i= i;
+            best_j= j;
+          }
+        }
+      }
+      if (bestDelta < 0){
+        s->sequence.erase(s->sequence.begin() + best_i);
+        s->sequence.insert(s->sequence.begin() + best_j);
+        s->custoSolucao= s->custoSolucao - delta;
+        
+        return true;
+      }
+      return false;
+    case 2: 
+
+    case 3:
+  }
+
 }
 
 void BuscaLocal (Solution *s){
