@@ -157,7 +157,6 @@ bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt
       }
     }
   }
-
   if (bestDelta < 0){
 
     j= best_j;
@@ -200,13 +199,39 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
       }
       if (bestDelta < 0){
         s->sequence.erase(s->sequence.begin() + best_i);
-        s->sequence.insert(s->sequence.begin() + best_j);
+        s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
         s->custoSolucao= s->custoSolucao - delta;
         
         return true;
       }
       return false;
-    case 2: 
+
+    case 2:          //método: OR-OPT-2
+
+      for(i= 1; i < s->sequence.size() - 1; i++) {
+        for (j= i + 2; j < s->sequence.size() - 1; j++){
+          
+          custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i+1][i+2] - matrizAdj[j+1][j+2] + matrizAdj[i-1][i+2] + matrizAdj[j+1][i] + matrizAdj[i+1][j+2];
+
+          double delta= s->custoSolucao - custoSwap;
+
+          if(delta < bestDelta){
+            bestDelta= delta;
+            best_i= i;
+            best_j= j;
+          }
+        }
+      }
+      if (bestDelta < 0){
+        s->sequence.erase(s->sequence.begin() + best_i);
+        s->sequence.erase(s->sequence.begin() + (best_i + 1));
+        s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
+        s->sequence.insert(s->sequence.begin() + (best_j + 1), s->sequence[best_i+1]);
+        s->custoSolucao= s->custoSolucao - delta;
+        
+        return true;
+      }
+      return false;
 
     case 3:
   }
