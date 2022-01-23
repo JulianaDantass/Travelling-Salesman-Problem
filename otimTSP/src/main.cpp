@@ -182,7 +182,7 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
   switch(quantity){
     
     case 1:             //método: REINSERTION
-    
+
       for(i= 1; i < s->sequence.size() - 1; i++) {
         for (j= i + 1; j < s->sequence.size() - 1; j++){
           
@@ -289,7 +289,7 @@ void BuscaLocal (Solution *s){
       case 4:
         improved= BestImprovementOrOpt(s, 2);   //Or-opt2
         break;
-      case 4:
+      case 5:
         improved= BestImprovementOrOpt(s, 3);   //Or-opt3
         break;
     }
