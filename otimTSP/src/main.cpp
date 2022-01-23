@@ -182,7 +182,7 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
   switch(quantity){
     
     case 1:             //método: REINSERTION
-
+    
       for(i= 1; i < s->sequence.size() - 1; i++) {
         for (j= i + 1; j < s->sequence.size() - 1; j++){
           
@@ -226,14 +226,42 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
         s->sequence.erase(s->sequence.begin() + best_i);
         s->sequence.erase(s->sequence.begin() + (best_i + 1));
         s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
-        s->sequence.insert(s->sequence.begin() + (best_j + 1), s->sequence[best_i+1]);
+        s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i+1]);
         s->custoSolucao= s->custoSolucao - delta;
         
         return true;
       }
       return false;
 
-    case 3:
+    case 3:      //método: OR-OPT-3
+
+      for(i= 1; i < s->sequence.size() - 1; i++) {
+        for (j= i + 3; j < s->sequence.size() - 1; j++){
+          
+          custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i+2][i+3] - matrizAdj[j+2][j+3] + matrizAdj[i-1][i+3] + matrizAdj[j+2][i] + matrizAdj[i+2][j+3];
+
+          double delta= s->custoSolucao - custoSwap; 
+
+          if(delta < bestDelta){
+            bestDelta= delta;
+            best_i= i;
+            best_j= j;
+          }
+        }
+      }
+      if (bestDelta < 0){
+        s->sequence.erase(s->sequence.begin() + best_i);
+        s->sequence.erase(s->sequence.begin() + (best_i + 1));
+        s->sequence.erase(s->sequence.begin() + (best_i + 2));
+        s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
+        s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i+1]);
+        s->sequence.insert(s->sequence.begin() + best_j + 2, s->sequence[best_i+2]);
+        s->custoSolucao= s->custoSolucao - delta;
+        
+        return true;
+      }
+
+      return false;  
   }
 
 }
