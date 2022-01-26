@@ -56,7 +56,7 @@ Solution Construcao(){
     std::vector<int> CL;
     srand(time(0));
     quant= CL.size();
-    numRandom= CL[0]-1 +rand()% CL[quant-1]+1;      //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
+    numRandom= CL[0] +rand()% CL[quant-1]+1;      //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
     s.sequence.insert(s.sequence.end()-1, numRandom);
 
     j= 0;
