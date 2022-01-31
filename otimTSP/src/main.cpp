@@ -198,8 +198,8 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
         }
       }
       if (bestDelta < 0){
+        s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i]);
         s->sequence.erase(s->sequence.begin() + best_i);
-        s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
         s->custoSolucao= s->custoSolucao - delta;
         
         return true;
@@ -223,10 +223,12 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
         }
       }
       if (bestDelta < 0){
-        s->sequence.erase(s->sequence.begin() + best_i);
+        s->sequence.insert(s->sequence.begin() + best_j + 2, s->sequence[best_i]);
+        s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i+1]);
         s->sequence.erase(s->sequence.begin() + (best_i + 1));
-        s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
-        s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i+1]);
+        s->sequence.erase(s->sequence.begin() + best_i);
+        
+        
         s->custoSolucao= s->custoSolucao - delta;
         
         return true;
@@ -250,12 +252,12 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
         }
       }
       if (bestDelta < 0){
-        s->sequence.erase(s->sequence.begin() + best_i);
-        s->sequence.erase(s->sequence.begin() + (best_i + 1));
+        s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i]);
+        s->sequence.insert(s->sequence.begin() + best_j + 4, s->sequence[best_i+1]);
+        s->sequence.insert(s->sequence.begin() + best_j + 5, s->sequence[best_i+2]);
         s->sequence.erase(s->sequence.begin() + (best_i + 2));
-        s->sequence.insert(s->sequence.begin() + best_j, s->sequence[best_i]);
-        s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i+1]);
-        s->sequence.insert(s->sequence.begin() + best_j + 2, s->sequence[best_i+2]);
+        s->sequence.erase(s->sequence.begin() + (best_i + 1));
+        s->sequence.erase(s->sequence.begin() + best_i);
         s->custoSolucao= s->custoSolucao - delta;
         
         return true;
@@ -302,6 +304,56 @@ void BuscaLocal (Solution *s){
     }
 
   } 
+}
+
+void Pertubacao (Solution *s){
+
+  int subseqMax, aux;
+  int subseq1, subseq2;
+  int index1, index2;
+  int i, times;
+
+  subseqMax= (s->sequence.size() - 1) / 10.0;    //a quant máxima de cidades nas subsequencias são de 2 ate o numero de cidades/ 10
+
+  if (subseqMax < 2){
+    subseqMax= 2;
+  }
+
+  subseq1= rand()+2 % subseqMax+1;   //sortear o tamanho que a primeira subseq terá
+  subseq2= rand()+2 % subseqMax+1;   //sortear o tamanho que a seg terá
+
+  if (subseq1 > subseq2){
+    aux= subseq1;
+    subseq1= subseq2;
+    subseq2= aux;
+  }
+
+  index1= rand()+1 % (s->sequence.size() - 1 - subseq2);
+
+  while(index2 >= index1 && index2 <= index1 + subseq1 - 1){
+
+    index2= rand()+1 % (s->sequence.size() - 1 - subseq1);
+  }
+  
+  for(i= 0; i < subseq1; i++){
+    std::swap(s->sequence[index1+i], s->sequence[index2+i]);
+  }
+  
+  if (subseq1 != subseq2){
+
+    times= subseq2- subseq1;
+
+    j= 0;
+    while(times != 0){
+      s->sequence.erase(s->sequence.begin() + index2 + subseq1 + j);
+      s->sequence.insert(s->sequence.begin() + index1 + subseq1 + j, s->sequence[index2 + subseq1 + j] );
+
+      times--;
+      j++;
+    }
+
+  }
+
 }
 
 int main(int argc, char** argv) {
