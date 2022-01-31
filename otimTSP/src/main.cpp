@@ -319,8 +319,8 @@ void Pertubacao (Solution *s){
     subseqMax= 2;
   }
 
-  subseq1= rand()+2 % subseqMax+1;   //sortear o tamanho que a primeira subseq terá
-  subseq2= rand()+2 % subseqMax+1;   //sortear o tamanho que a seg terá
+  subseq1= rand()+2 / subseqMax+1;   //sortear o tamanho que a primeira subseq terá
+  subseq2= rand()+2 / subseqMax+1;   //sortear o tamanho que a seg terá
 
   if (subseq1 > subseq2){
     aux= subseq1;
@@ -332,7 +332,7 @@ void Pertubacao (Solution *s){
 
   while(index2 >= index1 && index2 <= index1 + subseq1 - 1){
 
-    index2= rand()+1 % (s->sequence.size() - 1 - subseq1);
+    index2= rand()+1 / (s->sequence.size() - 1 - subseq1);
   }
   
   for(i= 0; i < subseq1; i++){
