@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -313,31 +314,14 @@ void Pertubacao (Solution *s){
   int index1, index2;
   int i, times;
 
-  subseqMax= (s->sequence.size() - 1) / 10.0;    //a quant máxima de cidades nas subsequencias são de 2 ate o numero de cidades/ 10
+  if (s->sequence.size()-1 <= 20){
+    subseq1= 2;
+    subseq2= 2;
 
-  if (subseqMax < 2){
-    subseqMax= 2;
-  }
-
-  subseq1= rand()+2 % subseqMax+1;   //sortear o tamanho que a primeira subseq terá
-  subseq2= rand()+2 % subseqMax+1;   //sortear o tamanho que a seg terá
-
-  if (subseq1 > subseq2){
-    aux= subseq1;
-    subseq1= subseq2;
-    subseq2= aux;
-  }
-
-  index1= rand()+1 % (s->sequence.size() - 1 - subseq2);
-
-  while(index2 >= index1 && index2 <= index1 + subseq1 - 1){
-
-    index2= rand()+1 % (s->sequence.size() - 1 - subseq1);
+  }else{
+     subseqMax= (s->sequence.size()-1) / 10.0;
   }
   
-  for(i= 0; i < subseq1; i++){
-    std::swap(s->sequence[index1+i], s->sequence[index2+i]);
-  }
   
   if (subseq1 != subseq2){
 
