@@ -46,18 +46,27 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
 Solution Construcao(){
   
-  Solution s;
   int numRandom, i, j, quant, aux;
+  Solution s;
+  std::vector<int> CL;
 
   s.sequence.push_back(1);      //adicionando a cidade 1 no inicio
   s.sequence.push_back(1);      //adicionando a c1 no final
   CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
+  srand(time(0));
+
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
-    std::vector<int> CL;
-    srand(time(0));
+
     quant= CL.size();
-    numRandom= CL[0] +rand()% CL[quant-1]+1;      //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
+
+    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
+      numRandom= rand();
+      if(numRandom >= CL[0] && numRandom <= CL[quant-1]){
+        break;
+      }
+    }
+         
     s.sequence.insert(s.sequence.end()-1, numRandom);
 
     j= 0;
