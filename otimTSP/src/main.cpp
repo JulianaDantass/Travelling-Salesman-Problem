@@ -314,28 +314,73 @@ void Pertubacao (Solution *s){
   int index1, index2;
   int i, times;
 
+  srand(time(0));
+
   if (s->sequence.size()-1 <= 20){
     subseq1= 2;
     subseq2= 2;
 
   }else{
      subseqMax= (s->sequence.size()-1) / 10.0;
-  }
-  
-  
-  if (subseq1 != subseq2){
+     
 
+     while(1){
+      subseq1= rand();
+
+      if(subseq1 >= 2 && subseq1 <= subseqMax){
+        break;
+      }
+     }
+
+     while(1){
+      subseq2= rand();
+      
+      if(subseq2 >= 2 && subseq2 <= subseqMax){
+        break;
+      }
+     }
+
+     if(subseq1 > subseq2){
+       aux= subseq1;
+       subseq1= subseq2;
+       subseq2= aux;
+     }
+  }
+
+  while(1){
+    index1= rand();
+
+    if(index1 >= 1 && index1 <= s->sequence.size()-subseq2){
+        break;
+    }
+  }
+
+  while(1){
+    index2= rand();
+
+    if(index2 >= 1 && index2 <= s->sequence.size()-subseq2){
+
+      if(index2 < index1 || index2 > index1+subseq2-1){
+        break;
+      }
+        
+    }
+  }
+
+  if (subseq1 == subseq2){
+    std::swap(s->sequence[i], s->sequence[j]);
+
+  }else{
     times= subseq2- subseq1;
 
     j= 0;
     while(times != 0){
-      s->sequence.erase(s->sequence.begin() + index2 + subseq1 + j);
       s->sequence.insert(s->sequence.begin() + index1 + subseq1 + j, s->sequence[index2 + subseq1 + j] );
-
+      s->sequence.erase(s->sequence.begin() + index2 + subseq1 + j);
+      
       times--;
       j++;
     }
-
   }
 
 }
