@@ -66,7 +66,7 @@ Solution Construcao(){
         break;
       }
     }
-         
+
     s.sequence.insert(s.sequence.end()-1, numRandom);
 
     j= 0;
@@ -237,8 +237,6 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
         s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i+1]);
         s->sequence.erase(s->sequence.begin() + (best_i + 1));
         s->sequence.erase(s->sequence.begin() + best_i);
-        
-        
         s->custoSolucao= s->custoSolucao - delta;
         
         return true;
@@ -275,7 +273,6 @@ bool BestImprovementOrOpt (Solution *s, int quantity){
 
       return false;  
   }
-
 }
 
 void BuscaLocal (Solution *s){
@@ -376,22 +373,23 @@ void Pertubacao (Solution *s){
     }
   }
 
-  if (subseq1 == subseq2){
-    std::swap(s->sequence[i], s->sequence[j]);
-
-  }else{
+    for(i= 0; i < subseq1-1; i++){
+      std::swap(s->sequence[i], s->sequence[j]);
+    }
+    
+  if(subseq1 != subseq2){
     times= subseq2- subseq1;
 
-    j= 0;
+    i= 0;
     while(times != 0){
-      s->sequence.insert(s->sequence.begin() + index1 + subseq1 + j, s->sequence[index2 + subseq1 + j] );
-      s->sequence.erase(s->sequence.begin() + index2 + subseq1 + j);
+      s->sequence.insert(s->sequence.begin() + index1 + subseq1 + i, s->sequence[index2 + subseq1 + i] );
+      s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i);
       
       times--;
-      j++;
+      i++;
     }
   }
-
+  
 }
 
 int main(int argc, char** argv) {
