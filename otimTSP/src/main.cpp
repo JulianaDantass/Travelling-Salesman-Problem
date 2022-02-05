@@ -44,14 +44,13 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
   return custoInsercao;
 }
 
-Solution Construcao(){
+Solution Construcao(Solution *s){
   
   int numRandom, i, j, quant, aux;
-  Solution s;
   std::vector<int> CL;
 
-  s.sequence.push_back(1);      //adicionando a cidade 1 no inicio
-  s.sequence.push_back(1);      //adicionando a c1 no final
+  s->sequence.push_back(1);      //adicionando a cidade 1 no inicio
+  s->sequence.push_back(1);      //adicionando a c1 no final
   CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
   srand(time(0));
@@ -67,7 +66,7 @@ Solution Construcao(){
       }
     }
 
-    s.sequence.insert(s.sequence.end()-1, numRandom);
+    s->sequence.insert(s->sequence.end()-1, numRandom);
 
     j= 0;
     while(1){           //retirar cidades escolhidas aleatoriamente da lista de candidatos
@@ -82,7 +81,7 @@ Solution Construcao(){
   while(!CL.empty()){
     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
 
-    for(i= 0; i < custoInsercao.size(); i++){               //ordernar os custos
+    for(i= 0; i < custoInsercao.size(); i++){               //ordernar os custos ---- tem que ser alterado
       for(j= 0; j < custoInsercao.size()-1; j++){
 
         if(custoInsercao[j] > custoInsercao[j+1]){
@@ -105,12 +104,12 @@ Solution Construcao(){
       j++;
     }
 
-    s.sequence.insert(s.sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
+    s->sequence.insert(s->sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
   }
 
   for(i= 0; i < s.sequence.size()-1; i++){        //calcular o custo do tour solução
 
-    s.custoSolucao += matrizAdj[i][i+1];        
+    s->custoSolucao += matrizAdj[i][i+1];        
   }
   
 }
@@ -377,7 +376,7 @@ void Pertubacao (Solution *s){
   }
 
   for(i= 0; i < subseq1; i++){
-      std::swap(sequence[index1+i], sequence[index2+i]);
+      std::swap(s->sequence[index1+i], sequence[index2+i]);
   }
 
   if(subseq1 != subseq2){
@@ -385,12 +384,12 @@ void Pertubacao (Solution *s){
 
     i= 0;
     while(times != 0){
-      sequence.insert(sequence.begin() + index1 + subseq1 + i, sequence[index2 + subseq1 + i] );
+      s->sequence.insert(s->sequence.begin() + index1 + subseq1 + i, s->sequence[index2 + subseq1 + i] );
 
       if(changed){
-        sequence.erase(sequence.begin() + index2 + subseq1 + i);
+        s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i);
       }else{
-        sequence.erase(sequence.begin() + index2 + subseq1 + i+1);
+        s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i+1);
       }
 
       times--;
@@ -402,7 +401,31 @@ void Pertubacao (Solution *s){
 
 int main(int argc, char** argv) {
 
+    int maxIter, i, size;
+    Solution s;
+    int maxIterIls;
+    
     readData(argc, argv, &dimension, &matrizAdj);
+
+    size= s.sequence.size()-1;
+
+    if(size <= 150){
+      maxIterIls= size/ 2.0;
+    }else{
+      maxIterIls= size;
+    }
+
+    maxIter= 50;
+    while(maxIter > 0){
+      Construcao(&s);
+
+      for(i= 0; i < maxIter; i++){
+        BuscaLocal(&s);
+      }
+
+      Pertubacao(&s);
+      maxIter--;
+    }
     //printData();
     return 0;  
 
