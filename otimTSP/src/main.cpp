@@ -376,7 +376,7 @@ void Pertubacao (Solution *s){
   }
 
   for(i= 0; i < subseq1; i++){
-      std::swap(s->sequence[index1+i], sequence[index2+i]);
+      std::swap(s->sequence[index1+i], s->sequence[index2+i]);
   }
 
   if(subseq1 != subseq2){
@@ -401,8 +401,8 @@ void Pertubacao (Solution *s){
 
 int main(int argc, char** argv) {
 
-    int maxIter, i, size;
     Solution s;
+    int maxIter, i, size;
     int maxIterIls;
     
     readData(argc, argv, &dimension, &matrizAdj);
