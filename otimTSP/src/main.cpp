@@ -12,16 +12,47 @@ int dimension; // quantidade total de vertices
 
 
 //void printData();
+
 struct InsertionInfo{
-    int noInserido;
-    int arestaRemovida;
-    double custo;
+  int noInserido;
+  int arestaRemovida;
+  double custo;
 };
 
 struct Solution{
-    std::vector<int> sequence;
-    double custoSolucao;
+  std::vector<int> sequence;
+  double custoSolucao;
 };
+
+void Quicksort (vector<int> &list, int begin, int end){      //ordenação rapida Quicksort
+
+  int i, j, pivot, position;
+  int aux;
+
+  if(begin < end){
+    pivot= list[end];
+    i= begin;
+
+    for(j= begin; j < end; j++){
+
+      if(list[j] <= pivot){
+        aux= list[j];
+        list[j]= list[i];
+        list[i]= aux;
+        i++;
+      }
+    }
+    aux= list[i];
+    list[i]= list[fim];
+    list[fim]= aux;
+
+    position= i;
+    
+    Quicksort(list, begin, position-1);
+    Quicksort(list, position+1, end);
+  }
+}
+
 
 InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
@@ -46,7 +77,8 @@ InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
 Solution Construcao(Solution *s){
   
-  int numRandom, i, j, quant, aux;
+  int numRandom, i, j, quant;
+  int endCL, endCost;
   std::vector<int> CL;
 
   s->sequence.push_back(1);      //adicionando a cidade 1 no inicio
@@ -54,6 +86,9 @@ Solution Construcao(Solution *s){
   CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
   srand(time(0));
+
+  endCL= CL.size() - 1;
+  Quicksort(&CL, 0, endCL);
 
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
 
@@ -78,19 +113,13 @@ Solution Construcao(Solution *s){
     }
   }
   
+
   while(!CL.empty()){
     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
 
-    for(i= 0; i < custoInsercao.size(); i++){               //ordernar os custos ---- tem que ser alterado
-      for(j= 0; j < custoInsercao.size()-1; j++){
+    endCost= custoInsercao.size() - 1;
 
-        if(custoInsercao[j] > custoInsercao[j+1]){
-          aux= custoInsercao[j];
-          custoInsercao[j]= custoInsercao[j+1]; 
-          custoInsercao[j+1]= aux; 
-        }
-      }
-    }
+    Quicksort(&custoInsercao, 0, endCost);
 
     double alpha= (double) rand() / RAND_MAX;
     int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
@@ -111,7 +140,6 @@ Solution Construcao(Solution *s){
 
     s->custoSolucao += matrizAdj[i][i+1];        
   }
-  
 }
 
 bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP 
