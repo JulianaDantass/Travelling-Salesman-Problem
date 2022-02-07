@@ -43,8 +43,8 @@ void Quicksort (vector<int> &list, int begin, int end){      //ordenação rapid
       }
     }
     aux= list[i];
-    list[i]= list[fim];
-    list[fim]= aux;
+    list[i]= list[end];
+    list[end]= aux;
 
     position= i;
     
