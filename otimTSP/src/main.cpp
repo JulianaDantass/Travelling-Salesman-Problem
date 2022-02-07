@@ -94,7 +94,7 @@ Solution Construcao(Solution *s){
 
     quant= CL.size();
 
-    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
+    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o ultimo elem. de CL
       numRandom= rand();
       if(numRandom >= CL[0] && numRandom <= CL[quant-1]){
         break;
@@ -357,7 +357,6 @@ void Pertubacao (Solution *s){
   }else{
      subseqMax= (s->sequence.size()-1) / 10.0;
      
-
      while(1){
       subseq1= rand();
 
@@ -394,7 +393,6 @@ void Pertubacao (Solution *s){
         break;
     }
   }
-
   while(1){
     index2= rand();
 
