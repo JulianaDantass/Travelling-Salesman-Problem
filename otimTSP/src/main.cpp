@@ -88,7 +88,7 @@ Solution Construcao(Solution *s){
   srand(time(0));
 
   endCL= CL.size() - 1;
-  Quicksort(&CL, 0, endCL);
+  Quicksort(CL, 0, endCL);
 
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
 
@@ -119,7 +119,7 @@ Solution Construcao(Solution *s){
 
     endCost= custoInsercao.size() - 1;
 
-    Quicksort(&custoInsercao, 0, endCost);
+    Quicksort(custoInsercao, 0, endCost);
 
     double alpha= (double) rand() / RAND_MAX;
     int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
