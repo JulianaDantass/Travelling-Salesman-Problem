@@ -4,6 +4,8 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -11,419 +13,392 @@ double ** matrizAdj; // matriz de adjacencia
 int dimension; // quantidade total de vertices
 
 
-// //void printData();
+void printData();
 
-// struct InsertionInfo{
-//   int noInserido;
-//   int arestaRemovida;
-//   double custo;
-// };
+struct InsertionInfo{
+  int noInserido;
+  int arestaRemovida;
+  double custo;
+};
 
 struct Solution{
   std::vector<int> sequence;
   double custoSolucao;
 };
 
-// void Quicksort (vector<int> &list, int begin, int end){      //ordenação rapida Quicksort
-
-//   int i, j, pivot, position;
-//   int aux;
-
-//   if(begin < end){
-//     pivot= list[end];
-//     i= begin;
-
-//     for(j= begin; j < end; j++){
-
-//       if(list[j] <= pivot){
-//         aux= list[j];
-//         list[j]= list[i];
-//         list[i]= aux;
-//         i++;
-//       }
-//     }
-//     aux= list[i];
-//     list[i]= list[end];
-//     list[end]= aux;
-
-//     position= i;
-    
-//     Quicksort(list, begin, position-1);
-//     Quicksort(list, position+1, end);
-//   }
-// }
+bool compares(InsertionInfo a, InsertionInfo b){
+  return a.custo < b.custo;
+}
 
 
-// InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
+InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
-//   custoInsercao= std::vector<InsertionInfo> custoInsercao ((s.size()-1) * CL.size());
+  std::vector<InsertionInfo> custoInsercao ((s.sequence.size()-1) * CL.size());
 
-//   int l= 0;
+  int a, b, i;
+  int l= 0;
 
-//   for(int a= 0; b= 1; i < s.size() - 1; a++, b++){
-//     int i= s.sequence[a];
-//     int j= s.sequence[b];
+  for(int a= 0; b= 1; i < s.sequence.size() - 1; a++, b++){
+    int i= s.sequence[a];
+    int j= s.sequence[b];
 
-//     for (auto k : CL){
-//       custoInsercao[l].custo= matrizAdj[i][k] + matrizAdj[j][k] - matrizAdj[i][j];
-//       custoInsercao[l].noInserido= k;
-//       custoInsercao[l].arestaRemovida= a;
-//       l++;
-//     }
+    for (auto k : CL){
+      custoInsercao[l].custo= matrizAdj[i][k] + matrizAdj[j][k] - matrizAdj[i][j];
+      custoInsercao[l].noInserido= k;
+      custoInsercao[l].arestaRemovida= a;
+      l++;
+    }
 
-//   }
-//   return custoInsercao;
-// }
+  }
+  return custoInsercao;
+}
 
-// Solution Construcao(Solution *s){
+Solution Construcao(Solution *s){
   
-//   int numRandom, i, j, quant;
-//   int endCL, endCost;
-//   std::vector<int> CL;
+  int numRandom, i, j, quant;
+  int endCL, endCost;
+  std::vector<int> CL;
 
-//   s->sequence.push_back(1);      //adicionando a cidade 1 no inicio
-//   s->sequence.push_back(1);      //adicionando a c1 no final
-//   CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
+  for(i= 1; i <= dimension; i++){
+    CL.push_back(i);
+  }
 
-//   srand(time(0));
+  s->sequence.push_back(1);      //adicionando a cidade 1 no inicio
+  s->sequence.push_back(1);      //adicionando a c1 no final
+  CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
-//   endCL= CL.size() - 1;
-//   Quicksort(CL, 0, endCL);
+  srand(time(0));
 
-//   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
+  for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
 
-//     quant= CL.size();
+    quant= CL.size();
 
-//     while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o ultimo elem. de CL
-//       numRandom= rand();
-//       if(numRandom >= CL[0] && numRandom <= CL[quant-1]){
-//         break;
-//       }
-//     }
+    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o ultimo elem. de CL
+      numRandom= rand();
+      if(numRandom >= CL[0] && numRandom <= CL[quant-1]){
+        break;
+      }
+    }
 
-//     s->sequence.insert(s->sequence.end()-1, numRandom);
+    s->sequence.insert(s->sequence.end()-1, numRandom);
 
-//     j= 0;
-//     while(1){           //retirar cidades escolhidas aleatoriamente da lista de candidatos
-//       if(numRandom == CL[j]){
-//         CL.erase(CL.begin()+j);
-//         break;
-//       }
-//       j++;
-//     }
-//   }
-  
+    j= 0;
+    while(1){           //retirar cidades escolhidas aleatoriamente da lista de candidatos
+      if(numRandom == CL[j]){
+        CL.erase(CL.begin()+j);
+        break;
+      }
+      j++;
+    }
+  }
+  while(!CL.empty()){
+    std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
 
-//   while(!CL.empty()){
-//     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
+    sort(custoInsercao.begin(), custoInsercao.end(), compares);   //ordena os custos
 
-//     endCost= custoInsercao.size() - 1;
+    double alpha= (double) rand() / RAND_MAX;
+    int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
 
-//     Quicksort(custoInsercao, 0, endCost);
+    j= 0;
+    while(1){           
+      if(selecionado == CL[j]){
+        CL.erase(CL.begin()+j);
+        break;
+      }
+      j++;
+    }
 
-//     double alpha= (double) rand() / RAND_MAX;
-//     int selecionado= rand() % ( (int) ceil(alpha * custoInsercao.size()) );
+    s->sequence.insert(s->sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
+  }
 
-//     j= 0;
-//     while(1){           
-//       if(selecionado == CL[j]){
-//         CL.erase(CL.begin()+j);
-//         break;
-//       }
-//       j++;
-//     }
+  for(i= 0; i < s->sequence.size()-1; i++){        //calcular o custo do tour solução
 
-//     s->sequence.insert(s->sequence.begin()+ custoInsercao.arestaRemovida + 1, selecionado);
-//   }
+    s->custoSolucao += matrizAdj[i][i+1];        
+  }
+}
 
-//   for(i= 0; i < s.sequence.size()-1; i++){        //calcular o custo do tour solução
+bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP 
 
-//     s->custoSolucao += matrizAdj[i][i+1];        
-//   }
-// }
+  double delta, bestDelta= 0;
+  int best_i, best_j;
+  int i, j;
+  double custoSwap;
 
-// bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP 
-
-//   double bestDelta= 0;
-//   int best_i, best_j;
-//   int i, j;
-//   double custoSwap;
-
-//   for(i= 1; i < s->sequence.size() - 1; i++) {
-//     for (j= i + 1; j < s->sequence.size() - 1; j++){
+  for(i= 1; i < s->sequence.size() - 1; i++) {
+    for (j= i + 1; j < s->sequence.size() - 1; j++){
       
-//       custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
+      custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
 
-//       double delta= s->custoSolucao - custoSwap;
+      delta= s->custoSolucao - custoSwap;
 
-//       if(delta < bestDelta){
-//         bestDelta= delta;
-//         best_i= i;
-//         best_j= j;
-//       }
-//     }
-//   }
+      if(delta < bestDelta){
+        bestDelta= delta;
+        best_i= i;
+        best_j= j;
+      }
+    }
+  }
 
-//   if (bestDelta < 0){
-//     std::swap(s->sequence[best_i], s->sequence[best_j]);
-//     s->custoSolucao= s->custoSolucao - delta;
-//     return true;
-//   }
+  if (bestDelta < 0){
+    std::swap(s->sequence[best_i], s->sequence[best_j]);
+    s->custoSolucao= s->custoSolucao - delta;
+    return true;
+  }
 
-//   return false;
-// }
+  return false;
+}
 
-// bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt 
+bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt 
 
-//   double bestDelta= 0;
-//   int best_i, best_j;
-//   int i, j;
-//   double custoSwap;
+  double bestDelta= 0;
+  int best_i, best_j;
+  int i, j;
+  double custoSwap;
 
-//   for(i= 1; i < s->sequence.size() - 1; i++) {
-//     for (j= i + 2; j < s->sequence.size() - 1; j++){
+  for(i= 1; i < s->sequence.size() - 1; i++) {
+    for (j= i + 2; j < s->sequence.size() - 1; j++){
       
-//       custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
+      custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
 
-//       double delta= s->custoSolucao - custoSwap;
+      double delta= s->custoSolucao - custoSwap;
 
-//       if(delta < bestDelta){
-//         bestDelta= delta;
-//         best_i= i;
-//         best_j= j;
-//       }
-//     }
-//   }
-//   if (bestDelta < 0){
+      if(delta < bestDelta){
+        bestDelta= delta;
+        best_i= i;
+        best_j= j;
+      }
+    }
+  }
+  if (bestDelta < 0){
 
-//     j= best_j;
-//     for(i= best_i; i < j; i++){               //for para inverter a subsequencia obtida anteriormente
-//       std::swap(s->sequence[i], s->sequence[j]);
-//       j--;
-//     }
-//     s->custoSolucao= s->custoSolucao - delta;
+    j= best_j;
+    for(i= best_i; i < j; i++){               //for para inverter a subsequencia obtida anteriormente
+      std::swap(s->sequence[i], s->sequence[j]);
+      j--;
+    }
+    s->custoSolucao= s->custoSolucao - delta;
     
-//     return true;
-//   }
+    return true;
+  }
 
-//   return false; 
-// }
+  return false; 
+}
 
-// bool BestImprovementOrOpt (Solution *s, int quantity){         
+bool BestImprovementOrOpt (Solution *s, int quantity){         
 
-//   double bestDelta= 0;
-//   int best_i, best_j;
-//   int i, j;
-//   double custoSwap;
+  double delta, bestDelta= 0;
+  int best_i, best_j;
+  int i, j;
+  double custoSwap;
 
-//   switch(quantity){
+  switch(quantity){
     
-//     case 1:             //método: REINSERTION
+    case 1:             //método: REINSERTION
 
-//       for(i= 1; i < s->sequence.size() - 1; i++) {
-//         for (j= i + 1; j < s->sequence.size() - 1; j++){
+      for(i= 1; i < s->sequence.size() - 1; i++) {
+        for (j= i + 1; j < s->sequence.size() - 1; j++){
           
-//           custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i][i+1] - matrizAdj[j][j+1] + matrizAdj[i-1][i+1] + matrizAdj[i][j] + matrizAdj[i][j+1];
+          custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i][i+1] - matrizAdj[j][j+1] + matrizAdj[i-1][i+1] + matrizAdj[i][j] + matrizAdj[i][j+1];
 
-//           double delta= s->custoSolucao - custoSwap;
+          delta= s->custoSolucao - custoSwap;
 
-//           if(delta < bestDelta){
-//             bestDelta= delta;
-//             best_i= i;
-//             best_j= j;
-//           }
-//         }
-//       }
-//       if (bestDelta < 0){
-//         s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i]);
-//         s->sequence.erase(s->sequence.begin() + best_i);
-//         s->custoSolucao= s->custoSolucao - delta;
+          if(delta < bestDelta){
+            bestDelta= delta;
+            best_i= i;
+            best_j= j;
+          }
+        }
+      }
+      if (bestDelta < 0){
+        s->sequence.insert(s->sequence.begin() + best_j + 1, s->sequence[best_i]);
+        s->sequence.erase(s->sequence.begin() + best_i);
+        s->custoSolucao= s->custoSolucao - delta;
         
-//         return true;
-//       }
-//       return false;
+        return true;
+      }
+      return false;
 
-//     case 2:          //método: OR-OPT-2
+    case 2:          //método: OR-OPT-2
 
-//       for(i= 1; i < s->sequence.size() - 1; i++) {
-//         for (j= i + 2; j < s->sequence.size() - 1; j++){
+      for(i= 1; i < s->sequence.size() - 1; i++) {
+        for (j= i + 2; j < s->sequence.size() - 1; j++){
           
-//           custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i+1][i+2] - matrizAdj[j+1][j+2] + matrizAdj[i-1][i+2] + matrizAdj[j+1][i] + matrizAdj[i+1][j+2];
+          custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i+1][i+2] - matrizAdj[j+1][j+2] + matrizAdj[i-1][i+2] + matrizAdj[j+1][i] + matrizAdj[i+1][j+2];
 
-//           double delta= s->custoSolucao - custoSwap;
+          delta= s->custoSolucao - custoSwap;
 
-//           if(delta < bestDelta){
-//             bestDelta= delta;
-//             best_i= i;
-//             best_j= j;
-//           }
-//         }
-//       }
-//       if (bestDelta < 0){
-//         s->sequence.insert(s->sequence.begin() + best_j + 2, s->sequence[best_i]);
-//         s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i+1]);
-//         s->sequence.erase(s->sequence.begin() + (best_i + 1));
-//         s->sequence.erase(s->sequence.begin() + best_i);
-//         s->custoSolucao= s->custoSolucao - delta;
+          if(delta < bestDelta){
+            bestDelta= delta;
+            best_i= i;
+            best_j= j;
+          }
+        }
+      }
+      if (bestDelta < 0){
+        s->sequence.insert(s->sequence.begin() + best_j + 2, s->sequence[best_i]);
+        s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i+1]);
+        s->sequence.erase(s->sequence.begin() + (best_i + 1));
+        s->sequence.erase(s->sequence.begin() + best_i);
+        s->custoSolucao= s->custoSolucao - delta;
         
-//         return true;
-//       }
-//       return false;
+        return true;
+      }
+      return false;
 
-//     case 3:      //método: OR-OPT-3
+    case 3:      //método: OR-OPT-3
 
-//       for(i= 1; i < s->sequence.size() - 1; i++) {
-//         for (j= i + 3; j < s->sequence.size() - 1; j++){
+      for(i= 1; i < s->sequence.size() - 1; i++) {
+        for (j= i + 3; j < s->sequence.size() - 1; j++){
           
-//           custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i+2][i+3] - matrizAdj[j+2][j+3] + matrizAdj[i-1][i+3] + matrizAdj[j+2][i] + matrizAdj[i+2][j+3];
+          custoSwap= s->custoSolucao - matrizAdj[i][i-1] - matrizAdj[i+2][i+3] - matrizAdj[j+2][j+3] + matrizAdj[i-1][i+3] + matrizAdj[j+2][i] + matrizAdj[i+2][j+3];
 
-//           double delta= s->custoSolucao - custoSwap; 
+          delta= s->custoSolucao - custoSwap; 
 
-//           if(delta < bestDelta){
-//             bestDelta= delta;
-//             best_i= i;
-//             best_j= j;
-//           }
-//         }
-//       }
-//       if (bestDelta < 0){
-//         s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i]);
-//         s->sequence.insert(s->sequence.begin() + best_j + 4, s->sequence[best_i+1]);
-//         s->sequence.insert(s->sequence.begin() + best_j + 5, s->sequence[best_i+2]);
-//         s->sequence.erase(s->sequence.begin() + (best_i + 2));
-//         s->sequence.erase(s->sequence.begin() + (best_i + 1));
-//         s->sequence.erase(s->sequence.begin() + best_i);
-//         s->custoSolucao= s->custoSolucao - delta;
+          if(delta < bestDelta){
+            bestDelta= delta;
+            best_i= i;
+            best_j= j;
+          }
+        }
+      }
+      if (bestDelta < 0){
+        s->sequence.insert(s->sequence.begin() + best_j + 3, s->sequence[best_i]);
+        s->sequence.insert(s->sequence.begin() + best_j + 4, s->sequence[best_i+1]);
+        s->sequence.insert(s->sequence.begin() + best_j + 5, s->sequence[best_i+2]);
+        s->sequence.erase(s->sequence.begin() + (best_i + 2));
+        s->sequence.erase(s->sequence.begin() + (best_i + 1));
+        s->sequence.erase(s->sequence.begin() + best_i);
+        s->custoSolucao= s->custoSolucao - delta;
         
-//         return true;
-//       }
+        return true;
+      }
 
-//       return false;  
-//   }
-// }
+      return false;  
+  }
+}
 
-// void BuscaLocal (Solution *s){
+void BuscaLocal (Solution *s){
 
-//   std::vector<int>NL= {1, 2, 3, 4, 5};
+  std::vector<int>NL= {1, 2, 3, 4, 5};
 
-//   bool improved= false;
+  bool improved= false;
 
-//   while(NL.empty() == false){
+  while(NL.empty() == false){
 
-//     int n= rand() % NL.size;
+    int n= rand() % NL.size();
 
-//     switch (NL(n)) {
-//       case 1: 
-//         improved= BestImprovementSwap(s);
-//         break;
-//       case 2: 
-//         improved= BestImprovement2Opt(s);
-//         break;
-//       case 3:
-//         improved= BestImprovementOrOpt(s, 1);   //reinsertion
-//         break;
-//       case 4:
-//         improved= BestImprovementOrOpt(s, 2);   //Or-opt2
-//         break;
-//       case 5:
-//         improved= BestImprovementOrOpt(s, 3);   //Or-opt3
-//         break;
-//     }
+    switch (NL[n]) {
+      case 1: 
+        improved= BestImprovementSwap(s);
+        break;
+      case 2: 
+        improved= BestImprovement2Opt(s);
+        break;
+      case 3:
+        improved= BestImprovementOrOpt(s, 1);   //reinsertion
+        break;
+      case 4:
+        improved= BestImprovementOrOpt(s, 2);   //Or-opt2
+        break;
+      case 5:
+        improved= BestImprovementOrOpt(s, 3);   //Or-opt3
+        break;
+    }
 
-//     if(improved){
-//       NL= {1, 2, 3, 4, 5};
+    if(improved){
+      NL= {1, 2, 3, 4, 5};
 
-//     }else{
-//       NL.erase(NL.begin() + n);
-//     }
+    }else{
+      NL.erase(NL.begin() + n);
+    }
 
-//   } 
-// }
+  } 
+}
 
-// void Pertubacao (Solution *s){
+void Pertubacao (Solution *s){
 
-//   int subseqMax, aux;
-//   int subseq1, subseq2;
-//   int index1, index2;
-//   bool changed= false;
-//   int i, times;
+  int subseqMax, aux;
+  int subseq1, subseq2;
+  int index1, index2;
+  bool changed= false;
+  int i, times;
 
-//   srand(time(0));
+  srand(time(0));
 
-//   if (s->sequence.size()-1 <= 20){
-//     subseq1= 2;
-//     subseq2= 2;
+  if (s->sequence.size()-1 <= 20){
+    subseq1= 2;
+    subseq2= 2;
 
-//   }else{
-//      subseqMax= (s->sequence.size()-1) / 10.0;
+  }else{
+     subseqMax= (s->sequence.size()-1) / 10.0;
      
-//      while(1){
-//       subseq1= rand();
+     while(1){
+      subseq1= rand();
 
-//       if(subseq1 >= 2 && subseq1 <= subseqMax){
-//         break;
-//       }
-//      }
+      if(subseq1 >= 2 && subseq1 <= subseqMax){
+        break;
+      }
+     }
 
-//      while(1){
-//       subseq2= rand();
+     while(1){
+      subseq2= rand();
       
-//       if(subseq2 >= 2 && subseq2 <= subseqMax){
-//         break;
-//       }
-//      }
+      if(subseq2 >= 2 && subseq2 <= subseqMax){
+        break;
+      }
+     }
 
-//      if(subseq1 > subseq2){
-//       aux= subseq1;
-//       subseq1= subseq2;
-//       subseq2= aux;
+     if(subseq1 > subseq2){
+      aux= subseq1;
+      subseq1= subseq2;
+      subseq2= aux;
 
-//       aux= index1;
-//       index1= index2;
-//       index2= aux;
+      aux= index1;
+      index1= index2;
+      index2= aux;
 
-//       changed= true;
-//     }
-//   }
+      changed= true;
+    }
+  }
 
-//   while(1){
-//     index1= rand();
+  while(1){
+    index1= rand();
 
-//     if(index1 >= 1 && index1 <= s->sequence.size()-subseq2-subseq1){
-//         break;
-//     }
-//   }
-//   while(1){
-//     index2= rand();
+    if(index1 >= 1 && index1 <= s->sequence.size()-subseq2-subseq1){
+        break;
+    }
+  }
+  while(1){
+    index2= rand();
 
-//     if(index2 >= index1+subseq2 && index2 <= s->sequence.size()-subseq2){
-//         break;    
-//     }
-//   }
+    if(index2 >= index1+subseq2 && index2 <= s->sequence.size()-subseq2){
+        break;    
+    }
+  }
 
-//   for(i= 0; i < subseq1; i++){
-//       std::swap(s->sequence[index1+i], s->sequence[index2+i]);
-//   }
+  for(i= 0; i < subseq1; i++){
+      std::swap(s->sequence[index1+i], s->sequence[index2+i]);
+  }
 
-//   if(subseq1 != subseq2){
-//     times= subseq2- subseq1;
+  if(subseq1 != subseq2){
+    times= subseq2- subseq1;
 
-//     i= 0;
-//     while(times != 0){
-//       s->sequence.insert(s->sequence.begin() + index1 + subseq1 + i, s->sequence[index2 + subseq1 + i] );
+    i= 0;
+    while(times != 0){
+      s->sequence.insert(s->sequence.begin() + index1 + subseq1 + i, s->sequence[index2 + subseq1 + i] );
 
-//       if(changed){
-//         s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i);
-//       }else{
-//         s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i+1);
-//       }
+      if(changed){
+        s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i);
+      }else{
+        s->sequence.erase(s->sequence.begin() + index2 + subseq1 + i+1);
+      }
 
-//       times--;
-//       i++;
-//     }
-//   }
+      times--;
+      i++;
+    }
+  }
   
-// }
+}
 
 int main(int argc, char** argv) {
 
@@ -457,14 +432,13 @@ int main(int argc, char** argv) {
     return 0;  
 
 }
-// /*
-// void printData() {
-//   cout << "dimension: " << dimension << endl;
-//   for (size_t i = 1; i <= dimension; i++) {
-//     for (size_t j = 1; j <= dimension; j++) {
-//       cout << matrizAdj[i][j] << " ";
-//     }
-//     cout << endl;
-//   }
-// }
-// */
+
+void printData() {
+  cout << "dimension: " << dimension << endl;
+  for (size_t i = 1; i <= dimension; i++) {
+    for (size_t j = 1; j <= dimension; j++) {
+      cout << matrizAdj[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
