@@ -26,19 +26,18 @@ struct Solution{
   double custoSolucao;
 };
 
-bool compares(InsertionInfo a, InsertionInfo b){
+bool compares(InsertionInfo a, InsertionInfo b){  //funcao auxiliar na ordenacao dos custos
   return a.custo < b.custo;
 }
 
-
-InsertionInfo calcularCustoInsercao (Solution& s, std::vector<int>& CL){
+std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
   std::vector<InsertionInfo> custoInsercao ((s.sequence.size()-1) * CL.size());
 
   int a, b, i;
   int l= 0;
 
-  for(int a= 0; b= 1; i < s.sequence.size() - 1; a++, b++){
+  for(int a= 0, b= 1; i < s.sequence.size() - 1; a++, b++){
     int i= s.sequence[a];
     int j= s.sequence[b];
 
@@ -138,7 +137,6 @@ bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP
       }
     }
   }
-
   if (bestDelta < 0){
     std::swap(s->sequence[best_i], s->sequence[best_j]);
     s->custoSolucao= s->custoSolucao - delta;
@@ -150,7 +148,7 @@ bool BestImprovementSwap (Solution *s){         //estrutura de vizinhança: SWAP
 
 bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt 
 
-  double bestDelta= 0;
+  double delta, bestDelta= 0;
   int best_i, best_j;
   int i, j;
   double custoSwap;
@@ -160,7 +158,7 @@ bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt
       
       custoSwap= s->custoSolucao - matrizAdj[i-1][i] - matrizAdj[j][j+1] + matrizAdj[i-1][j] + matrizAdj[i][j+1];
 
-      double delta= s->custoSolucao - custoSwap;
+      delta= s->custoSolucao - custoSwap;
 
       if(delta < bestDelta){
         bestDelta= delta;
@@ -184,7 +182,7 @@ bool BestImprovement2Opt (Solution *s){         //estrutura de vizinhança: 2opt
   return false; 
 }
 
-bool BestImprovementOrOpt (Solution *s, int quantity){         
+bool BestImprovementOrOpt (Solution *s, int quantity){   //as 3 outras estruturas de vizinhança 
 
   double delta, bestDelta= 0;
   int best_i, best_j;
@@ -418,17 +416,18 @@ int main(int argc, char** argv) {
 
     maxIter= 50;
     while(maxIter > 0){
-      //Construcao(&s);
+      Construcao(&s);
 
       for(i= 0; i < maxIter; i++){
-        //BuscaLocal(&s);
+        BuscaLocal(&s);
       }
 
-      //Pertubacao(&s);
+      Pertubacao(&s);
       maxIter--;
     }
-    //printData();
-    cout << dimension << endl;
+
+    printData();
+    
     return 0;  
 
 }
