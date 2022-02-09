@@ -34,13 +34,14 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
 
   std::vector<InsertionInfo> custoInsercao ((s.sequence.size()-1) * CL.size());
 
-  int a, b, i, k;
+  
+
+  int a, b, i, k, cont;
   int l= 0;
 
-  i= 0;
-  k= 0;
-  for(int a= 0, b= 1; i < s.sequence.size() - 1; a++, b++){
-    cout << l << endl;
+  cont= 0;
+  for(int a= 0, b= 1; cont < s.sequence.size() - 1; a++, b++){
+    
     int i= s.sequence[a];
     int j= s.sequence[b];
 
@@ -51,8 +52,9 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
       l++;
       
     }
-
+    cont++;
   }
+  
   return custoInsercao;
 }
 
@@ -77,8 +79,6 @@ Solution Construcao(Solution& s){
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
 
     quant= CL.size();
-
-    cout << "dentro do for" << endl;
 
     flag= false;
     while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
@@ -110,7 +110,7 @@ Solution Construcao(Solution& s){
 
     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
     
-
+    
     sort(custoInsercao.begin(), custoInsercao.end(), compares);   //ordena os custos
 
     double alpha= (double) rand() / RAND_MAX;
@@ -126,13 +126,15 @@ Solution Construcao(Solution& s){
       }
       j++;
     }
-
   }
-
-  for(i= 0; i < s.sequence.size()-1; i++){        //calcular o custo do tour solução
-
+  
+  s.custoSolucao= 0;
+  for(i= 0; i < s.sequence.size()-2; i++){        //calcular o custo do tour solução
     s.custoSolucao += matrizAdj[i][i+1];        
   }
+  s.custoSolucao += matrizAdj[i][0];
+  
+  return s;
 }
 
 bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP 
@@ -437,7 +439,7 @@ int main(int argc, char** argv) {
       Construcao(s);
       cout << "construcao" << endl;
 
-      for(i= 0; i < maxIter; i++){
+      for(i= 0; i < maxIterIls; i++){
         BuscaLocal(s);
       }
 
