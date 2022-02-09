@@ -34,10 +34,13 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
 
   std::vector<InsertionInfo> custoInsercao ((s.sequence.size()-1) * CL.size());
 
-  int a, b, i;
+  int a, b, i, k;
   int l= 0;
 
+  i= 0;
+  k= 0;
   for(int a= 0, b= 1; i < s.sequence.size() - 1; a++, b++){
+    cout << l << endl;
     int i= s.sequence[a];
     int j= s.sequence[b];
 
@@ -46,6 +49,7 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
       custoInsercao[l].noInserido= k;
       custoInsercao[l].arestaRemovida= a;
       l++;
+      
     }
 
   }
@@ -55,7 +59,7 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
 Solution Construcao(Solution& s){
   
   int numRandom, i, j, quant;
-  int endCL, endCost;
+  bool flag;         
   std::vector<int> CL;
 
   for(i= 1; i <= dimension; i++){
@@ -68,13 +72,24 @@ Solution Construcao(Solution& s){
 
   srand(time(0));
 
+  
+
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
 
     quant= CL.size();
 
-    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o ultimo elem. de CL
+    cout << "dentro do for" << endl;
+
+    flag= false;
+    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
       numRandom= rand();
-      if(numRandom >= CL[0] && numRandom <= CL[quant-1]){
+      for(j= 0; j < quant; j++){
+        if(numRandom == CL[j]){
+            flag= true;          //flag pra saber se entrou no if
+            break;
+        }
+      }
+      if(flag){
         break;
       }
     }
@@ -90,8 +105,11 @@ Solution Construcao(Solution& s){
       j++;
     }
   }
+
   while(!CL.empty()){
+
     std::vector<InsertionInfo> custoInsercao= calcularCustoInsercao(s, CL);
+    
 
     sort(custoInsercao.begin(), custoInsercao.end(), compares);   //ordena os custos
 
@@ -402,22 +420,22 @@ void Pertubacao (Solution& s){
 int main(int argc, char** argv) {
 
     Solution s;
-    int maxIter, i, size;
+    int maxIter, i;
     int maxIterIls;
-    
+
     readData(argc, argv, &dimension, &matrizAdj);
 
-    size= s.sequence.size()-1;
 
-    if(size <= 150){
-      maxIterIls= size/ 2.0;
+    if(dimension <= 150){
+      maxIterIls= dimension/ 2.0;
     }else{
-      maxIterIls= size;
+      maxIterIls= dimension;
     }
 
     maxIter= 50;
     while(maxIter > 0){
       Construcao(s);
+      cout << "construcao" << endl;
 
       for(i= 0; i < maxIter; i++){
         BuscaLocal(s);
