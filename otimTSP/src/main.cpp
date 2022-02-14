@@ -341,7 +341,7 @@ void BuscaLocal (Solution& s){
   } 
 }
 
-Solution Pertubacao (Solution& s){
+Solution Pertubacao (Solution& s){ 
 
   cout << "entrou na pert" << endl;
   int subseqMax, aux;
