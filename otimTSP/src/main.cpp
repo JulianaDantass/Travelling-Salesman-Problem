@@ -139,16 +139,21 @@ Solution Construcao(Solution& s){
 
 bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP 
 
-  double delta, bestDelta= 0;
+  double delta, bestDelta;
   int best_i, best_j;
   int i, j;
   double changeCost;
 
+  bestDelta= 0;
   for(i= 1; i < s.sequence.size() - 2; i++) {
     for (j= i + 1; j < s.sequence.size() - 1; j++){
       
-      changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] - matrizAdj[s.sequence[j-1]][s.sequence[j]] 
-                                 + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[j]][s.sequence[i+1]] + matrizAdj[s.sequence[i]][s.sequence[j+1]] + matrizAdj[s.sequence[i]][s.sequence[j-1]];
+      if(i == j-1){
+        changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
+      }else{
+        changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] - matrizAdj[s.sequence[j-1]][s.sequence[j]] 
+                                   + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i+1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]] + matrizAdj[s.sequence[i]][s.sequence[j-1]];
+      }
  
       delta= changeCost - s.custoSolucao;
 
@@ -159,8 +164,6 @@ bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP
       }
     }
   }
-  cout << "best i" << best_i << endl;
-  cout << "best j" << best_j << endl;
 
   if (bestDelta < 0){
     std::swap(s.sequence[best_i], s.sequence[best_j]);
@@ -448,7 +451,7 @@ int main(int argc, char** argv) {
     srand(time(0));
 
    maxIter= 50;
-   for(i= 0; i < maxIter; i++){
+   //for(i= 0; i < maxIter; i++){
       Construcao(s);
 
     for(i= 0; i < s.sequence.size(); i++){
@@ -462,19 +465,19 @@ int main(int argc, char** argv) {
 
       count= 0;
       while(count < maxIterIls){
-        //BuscaLocal(s);
+        BuscaLocal(s);
 
         cout << "custo final " << s.custoSolucao << endl;
-        //if(s.custoSolucao < bestS.custoSolucao){
+        if(s.custoSolucao < bestS.custoSolucao){
           bestS= s;
           count= 0;
-        //}
+        }
         //s= Pertubacao(bestS);
         count++;
       }
       
      
-   }
+   //}
 
     //printData();
     
