@@ -315,7 +315,7 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
 void BuscaLocal (Solution& s){
 
-  std::vector<int>NL= {2};
+  std::vector<int>NL= {1, 2, 3, 4, 5};
   
   bool improved= false;
   int i;
@@ -325,25 +325,25 @@ void BuscaLocal (Solution& s){
     
     switch (NL[n]) {
       case 1: 
-        //improved= BestImprovementSwap(s);      //OK
+        improved= BestImprovementSwap(s);      
         break;
       case 2: 
-        //improved= BestImprovement2Opt(s);      //REVISAO
+        improved= BestImprovement2Opt(s);      
         break;
       case 3:
-        //improved= BestImprovementOrOpt(s, 1);   //reinsertion    //OK
+        improved= BestImprovementOrOpt(s, 1);   //reinsertion    
         break;
       case 4:
-        //improved= BestImprovementOrOpt(s, 2);   //Or-opt2       //OK
+        improved= BestImprovementOrOpt(s, 2);   //Or-opt2       
         break;
       case 5:
-        improved= BestImprovementOrOpt(s, 3);   //Or-opt3       //ok
+        improved= BestImprovementOrOpt(s, 3);   //Or-opt3       
         break;
     }
     
 
     if(improved){
-      NL= {2};
+      NL= {1, 2, 3, 4, 5};
 
     }else{
       NL.erase(NL.begin() + n);
@@ -440,7 +440,7 @@ Solution Pertubacao (Solution& s){
 
 int main(int argc, char** argv) {
 
-    Solution s, bestS;
+    Solution s, bestS, bestOfAll;
     int maxIter, maxIterIls;
     int i, count;
 
@@ -455,7 +455,7 @@ int main(int argc, char** argv) {
     srand(time(0));
 
    maxIter= 50;
-   //for(i= 0; i < maxIter; i++){
+   for(i= 0; i < maxIter; i++){
       Construcao(s);
 
     for(i= 0; i < s.sequence.size(); i++){
@@ -464,6 +464,7 @@ int main(int argc, char** argv) {
 
       if(i == 0){
         bestS= s;
+        bestOfAll= s;
       }
       cout << "custo inicial " << s.custoSolucao << endl;
 
@@ -476,12 +477,15 @@ int main(int argc, char** argv) {
           bestS= s;
           count= 0;
         }
-        //s= Pertubacao(bestS);
+        s= Pertubacao(bestS);
         count++;
       }
-      
-     
-   //}
+
+    if(bestS.custoSolucao < bestOfAll.custoSolucao){
+      bestOfAll= bestS;
+    }
+
+   }
 
     //printData();
     
