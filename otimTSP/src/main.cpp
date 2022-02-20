@@ -354,7 +354,6 @@ void BuscaLocal (Solution& s){
 
 Solution Pertubacao (Solution& s){ 
 
-  cout << "entrou na pert" << endl;
   int subseqMax, aux;
   int subseq1, subseq2;
   int index1, index2;
@@ -363,15 +362,15 @@ Solution Pertubacao (Solution& s){
 
   srand(time(0));
 
-  if (s.sequence.size()-1 <= 20){
+  if (dimension <= 20){
     subseq1= 2;
     subseq2= 2;
 
   }else{
-     subseqMax= (s.sequence.size()-1) / 10.0;
+     subseqMax= dimension / 10.0;
      
      while(1){
-      subseq1= rand();
+      subseq1= rand() % subseqMax + 1;
 
       if(subseq1 >= 2 && subseq1 <= subseqMax){
         break;
@@ -398,24 +397,24 @@ Solution Pertubacao (Solution& s){
       changed= true;
     }
   }
-
+ 
   while(1){
-    index1= rand();
+    index1= rand() % dimension;
 
-    if(index1 >= 1 && index1 <= s.sequence.size()-subseq2-subseq1){
+    if(index1 >= 1 && index1 <= dimension-subseq2-subseq1){
         break;
     }
   }
   while(1){
-    index2= rand();
+    index2= rand() % dimension;
 
-    if(index2 >= index1+subseq2 && index2 <= s.sequence.size()-subseq2){
+    if(index2 >= index1+subseq2 && index2 <= dimension-subseq2){
         break;    
     }
   }
 
   for(i= 0; i < subseq1; i++){
-      std::swap(s.sequence[index1+i], s.sequence[index2+i]);
+    std::swap(s.sequence[index1+i], s.sequence[index2+i]);
   }
 
   if(subseq1 != subseq2){
@@ -436,6 +435,12 @@ Solution Pertubacao (Solution& s){
     }
   }
   
+  s.custoSolucao= 0;
+  for(i= 0; i < s.sequence.size()-1; i++){  
+    s.custoSolucao += matrizAdj[s.sequence[i]][s.sequence[i+1]];        
+  }
+
+  return s;
 }
 
 int main(int argc, char** argv) {
@@ -454,35 +459,35 @@ int main(int argc, char** argv) {
     }
     srand(time(0));
 
-   maxIter= 50;
+
+   maxIter= 1;
    for(i= 0; i < maxIter; i++){
       Construcao(s);
 
-    for(i= 0; i < s.sequence.size(); i++){
-      cout << s.sequence[i] << " ";
-    }
+      bestS= s;
 
       if(i == 0){
-        bestS= s;
         bestOfAll= s;
       }
+
       cout << "custo inicial " << s.custoSolucao << endl;
 
       count= 0;
       while(count < maxIterIls){
         BuscaLocal(s);
 
-        cout << "custo final " << s.custoSolucao << endl;
         if(s.custoSolucao < bestS.custoSolucao){
           bestS= s;
           count= 0;
         }
-        s= Pertubacao(bestS);
+        
+        s= Pertubacao(bestS);   
+        cout << "custo final " << s.custoSolucao << endl;
         count++;
       }
 
     if(bestS.custoSolucao < bestOfAll.custoSolucao){
-      bestOfAll= bestS;
+      bestOfAll= s;
     }
 
    }
