@@ -378,7 +378,7 @@ Solution Pertubacao (Solution& s){
      }
 
      while(1){
-      subseq2= rand();
+      subseq2= rand() % subseqMax + 1;
       
       if(subseq2 >= 2 && subseq2 <= subseqMax){
         break;
@@ -434,12 +434,14 @@ Solution Pertubacao (Solution& s){
       i++;
     }
   }
-  
-  s.custoSolucao= 0;
-  for(i= 0; i < s.sequence.size()-1; i++){  
-    s.custoSolucao += matrizAdj[s.sequence[i]][s.sequence[i+1]];        
-  }
 
+  
+  s.custoSolucao -= matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index1+subseq1]]
+                    -matrizAdj[s.sequence[index2-1]][s.sequence[index2]] - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]]
+                    +matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1+subseq1]]
+                    +matrizAdj[s.sequence[index2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
+
+  
   return s;
 }
 
@@ -460,7 +462,7 @@ int main(int argc, char** argv) {
     srand(time(0));
 
 
-   maxIter= 1;
+   maxIter= 50;
    for(i= 0; i < maxIter; i++){
       Construcao(s);
 
@@ -470,30 +472,32 @@ int main(int argc, char** argv) {
         bestOfAll= s;
       }
 
-      cout << "custo inicial " << s.custoSolucao << endl;
+      //cout << "custo inicial " << s.custoSolucao << endl;
 
       count= 0;
       while(count < maxIterIls){
         BuscaLocal(s);
 
+        //cout << "solucao atual" << s.custoSolucao << endl;
+        
         if(s.custoSolucao < bestS.custoSolucao){
           bestS= s;
           count= 0;
         }
         
-        s= Pertubacao(bestS);   
-        cout << "custo final " << s.custoSolucao << endl;
+        s= Pertubacao(s);   
+        //cout << "best s" << bestS.custoSolucao << endl;
         count++;
       }
 
     if(bestS.custoSolucao < bestOfAll.custoSolucao){
-      bestOfAll= s;
+      bestOfAll= bestS;
     }
-
-   }
-
-    //printData();
     
+   }
+    cout << "melhor " << bestOfAll.custoSolucao << endl;
+    //printData();
+
     return 0;  
 
 }
