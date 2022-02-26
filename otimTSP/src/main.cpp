@@ -60,51 +60,25 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
 
 Solution Construcao(Solution& s){
   
-  int numRandom, i, j, quant;
-  bool flag;         
+  int indexRandom, i, j;  
   std::vector<int> CL;
 
   for(i= 1; i <= dimension; i++){
     CL.push_back(i);
   }
 
-  s.sequence.push_back(1);      //adicionando a cidade 1 no inicio
-  s.sequence.push_back(1);      //adicionando a c1 no final
+  s.sequence.push_back(1);
+  s.sequence.push_back(1);      //adicionando a c1 no inicio e no final
   CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
   srand(time(0));
 
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
-    quant= CL.size();
-
-    flag= false;
-    while(1){       //gera numeros aleatorios entre o primeiro elem de CL e o penultimo elem. de CL
       
-      numRandom= rand() % CL[quant];
+    indexRandom= rand() % CL.size();
 
-      if(numRandom >= CL[0] && numRandom <= CL[quant-1]){
-        for(j= 0; j < quant; j++){
-          if(numRandom == CL[j]){
-              flag= true;          //flag pra saber se entrou no if
-              break;
-          }
-        }
-      }
-      if(flag){
-        break;
-      }
-    }
-
-    s.sequence.insert(s.sequence.end()-1, numRandom);
-
-    j= 0;
-    while(1){           //retirar cidades escolhidas aleatoriamente da lista de candidatos
-      if(numRandom == CL[j]){
-        CL.erase(CL.begin()+j);
-        break;
-      }
-      j++;
-    }
+    s.sequence.insert(s.sequence.end()-1, CL[indexRandom]);
+    CL.erase(CL.begin() + indexRandom);
   }
 
   while(!CL.empty()){
@@ -352,15 +326,14 @@ void BuscaLocal (Solution& s){
   } 
 }
 
-Solution Pertubacao (Solution& s){ 
+Solution Pertubacao (Solution s){ 
 
   int subseqMax, aux;
   int subseq1, subseq2;
   int index1, index2;
   bool changed= false;
   int i, times;
-
-  srand(time(0));
+  
 
   if (dimension <= 20){
     subseq1= 2;
@@ -368,40 +341,25 @@ Solution Pertubacao (Solution& s){
 
   }else{
      subseqMax= dimension / 10.0;
-     
-     while(1){
-      subseq1= rand() % subseqMax + 1;
+     subseqMax--;       //recurso utilizado para facilitar o uso do rand
 
-      if(subseq1 >= 2 && subseq1 <= subseqMax){
-        break;
-      }
-     }
-
-     while(1){
-      subseq2= rand() % subseqMax + 1;
+     subseq1= rand() % subseqMax + 2;
+     subseq2= rand() % subseqMax + 2;
       
-      if(subseq2 >= 2 && subseq2 <= subseqMax){
-        break;
-      }
-     }
 
      if(subseq1 > subseq2){
       aux= subseq1;
       subseq1= subseq2;
       subseq2= aux;
 
-      aux= index1;
-      index1= index2;
-      index2= aux;
-
       changed= true;
     }
   }
  
   while(1){
-    index1= rand() % dimension;
+    index1= rand() % dimension + 1;
 
-    if(index1 >= 1 && index1 <= dimension-subseq2-subseq1){
+    if(index1 <= dimension-subseq2-subseq1-1){
         break;
     }
   }
@@ -413,9 +371,18 @@ Solution Pertubacao (Solution& s){
     }
   }
 
-  for(i= 0; i < subseq1; i++){
-    std::swap(s.sequence[index1+i], s.sequence[index2+i]);
-  }
+   if((index1 + subseq1) == index2){
+     s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2]] 
+                                    - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]] + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] 
+                                    + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
+
+   }else{
+     s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index1+subseq1]]
+                                    - matrizAdj[s.sequence[index2-1]][s.sequence[index2]] - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]]
+                                    + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1+subseq1]]
+                                    + matrizAdj[s.sequence[index2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
+   }
+
 
   if(subseq1 != subseq2){
     times= subseq2- subseq1;
@@ -424,28 +391,20 @@ Solution Pertubacao (Solution& s){
     while(times != 0){
       s.sequence.insert(s.sequence.begin() + index1 + subseq1 + i, s.sequence[index2 + subseq1 + i] );
 
-      if(changed){
-        s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i);
-      }else{
-        s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
-      }
+      s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
 
       times--;
       i++;
     }
   }
 
-  
-  s.custoSolucao -= matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index1+subseq1]]
-                    -matrizAdj[s.sequence[index2-1]][s.sequence[index2]] - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]]
-                    +matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1+subseq1]]
-                    +matrizAdj[s.sequence[index2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
 
-  
   return s;
 }
 
 int main(int argc, char** argv) {
+
+    clock_t start= clock();    //inicia a contagem do tempo de execucao  
 
     Solution s, bestS, bestOfAll;
     int maxIter, maxIterIls;
@@ -472,21 +431,17 @@ int main(int argc, char** argv) {
         bestOfAll= s;
       }
 
-      //cout << "custo inicial " << s.custoSolucao << endl;
-
       count= 0;
       while(count < maxIterIls){
         BuscaLocal(s);
-
-        //cout << "solucao atual" << s.custoSolucao << endl;
         
         if(s.custoSolucao < bestS.custoSolucao){
           bestS= s;
           count= 0;
         }
         
-        s= Pertubacao(s);   
-        //cout << "best s" << bestS.custoSolucao << endl;
+        s= Pertubacao(bestS);   
+        cout << "best s" << bestS.custoSolucao << endl;
         count++;
       }
 
@@ -497,6 +452,11 @@ int main(int argc, char** argv) {
    }
     cout << "melhor " << bestOfAll.custoSolucao << endl;
     //printData();
+
+    clock_t end= clock();
+    double time= ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    cout << "tempo: " << time << endl;   //imprime o tempo total de execucao
 
     return 0;  
 
