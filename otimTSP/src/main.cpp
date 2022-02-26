@@ -56,10 +56,11 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
   return custoInsercao;
 }
 
-void Construcao(Solution& s){
+Solution Construcao(){
   
   int indexRandom, i, j;  
   std::vector<int> CL;
+  Solution s;
 
 
   for(i= 2; i <= dimension; i++){ //comeca do 2 pq a c1 é adicionada logo apos
@@ -106,6 +107,7 @@ void Construcao(Solution& s){
     s.custoSolucao += matrizAdj[s.sequence[i]][s.sequence[i+1]];        
   }
 
+  return s;
 }
 
 bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP 
@@ -332,7 +334,6 @@ Solution Pertubacao (Solution s){
   int i, times;
 
 
-
   if (dimension <= 20){
     subseq1= 2;
     subseq2= 2;
@@ -368,6 +369,7 @@ Solution Pertubacao (Solution s){
         break;    
     }
   }
+  
 
    if((index1 + subseq1) == index2){
      s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2]] 
@@ -380,6 +382,10 @@ Solution Pertubacao (Solution s){
                                     + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1+subseq1]]
                                     + matrizAdj[s.sequence[index2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
    }
+
+  for(i= 0; i < subseq1; i++){
+    std::swap(s.sequence[index1+i], s.sequence[index2+i]);
+  }
 
 
   if(subseq1 != subseq2){
@@ -396,6 +402,7 @@ Solution Pertubacao (Solution s){
     }
   }
 
+  
 
   return s;
 }
@@ -406,7 +413,7 @@ int main(int argc, char** argv) {
 
     Solution s, bestS, bestOfAll;
     int maxIter, maxIterIls;
-    int i, count;
+    int i, count, j;
 
     readData(argc, argv, &dimension, &matrizAdj);
 
@@ -421,7 +428,8 @@ int main(int argc, char** argv) {
    bestOfAll.custoSolucao= (double) INFINITY;
    maxIter= 50;
    for(i= 0; i < maxIter; i++){
-      Construcao(s);
+      
+      s= Construcao();
 
       bestS= s;
 
@@ -435,7 +443,10 @@ int main(int argc, char** argv) {
         }
         
         s= Pertubacao(bestS);   
-        //cout << "best s" << bestS.custoSolucao << endl;
+        // for(j= 0; j < s.sequence.size(); j++){
+        //   cout << s.sequence[j] << " ";
+        // } 
+        // cout << endl;
         count++;
       }
 
