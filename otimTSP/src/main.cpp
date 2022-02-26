@@ -154,6 +154,7 @@ bool BestImprovement2Opt (Solution& s){         //estrutura de vizinhança: 2opt
   int i, j;
   double changeCost;
 
+
   for(i= 1; i < s.sequence.size() - 1; i++) {
     for (j= i + 2; j < s.sequence.size() - 1; j++){
       
@@ -169,6 +170,7 @@ bool BestImprovement2Opt (Solution& s){         //estrutura de vizinhança: 2opt
       }
     }
   }
+
   if (bestDelta < 0){
 
     j= best_j;
@@ -295,7 +297,7 @@ void BuscaLocal (Solution& s){
   while(NL.empty() == false){
     
     int n= rand() % NL.size();
-    
+
     switch (NL[n]) {
       case 1: 
         improved= BestImprovementSwap(s);      
@@ -316,7 +318,7 @@ void BuscaLocal (Solution& s){
     
 
     if(improved){
-      NL= {1, 2, 3, 4, 5};
+      NL={1, 2, 3, 4, 5};
 
     }else{
       NL.erase(NL.begin() + n);
@@ -456,7 +458,7 @@ int main(int argc, char** argv) {
     
    }
     cout << "melhor " << bestOfAll.custoSolucao << endl;
-    //printData();
+    printData();
 
     clock_t end= clock();
     double time= ((double) (end - start)) / CLOCKS_PER_SEC;
