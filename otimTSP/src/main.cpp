@@ -34,12 +34,10 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
 
   std::vector<InsertionInfo> custoInsercao ((s.sequence.size()-1) * CL.size());
 
-  
-
-  int a, b, i, k, count;
+  int a, b, i, k;
+  int count= 0;
   int l= 0;
 
-  count= 0;
   for(int a= 0, b= 1; count < s.sequence.size() - 1; a++, b++){
     
     int i= s.sequence[a];
@@ -58,20 +56,19 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
   return custoInsercao;
 }
 
-Solution Construcao(Solution& s){
+void Construcao(Solution& s){
   
   int indexRandom, i, j;  
   std::vector<int> CL;
 
-  for(i= 1; i <= dimension; i++){
+
+  for(i= 2; i <= dimension; i++){ //comeca do 2 pq a c1 é adicionada logo apos
     CL.push_back(i);
   }
 
   s.sequence.push_back(1);
   s.sequence.push_back(1);      //adicionando a c1 no inicio e no final
-  CL.erase(CL.begin());        //tirando a cidade 1 da lista de candidatos
 
-  srand(time(0));
 
   for(i= 1; i <= 3; i++){       //funcao para escolher 3 cidades aleatorias
       
@@ -101,14 +98,14 @@ Solution Construcao(Solution& s){
       }
       j++;
     }
+
   }
   
   s.custoSolucao= 0;
   for(i= 0; i < s.sequence.size()-1; i++){        //calcular o custo do tour solução
     s.custoSolucao += matrizAdj[s.sequence[i]][s.sequence[i+1]];        
   }
-  
-  return s;
+
 }
 
 bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP 
@@ -292,7 +289,7 @@ void BuscaLocal (Solution& s){
   std::vector<int>NL= {1, 2, 3, 4, 5};
   
   bool improved= false;
-  int i;
+  
   while(NL.empty() == false){
     
     int n= rand() % NL.size();
@@ -326,14 +323,15 @@ void BuscaLocal (Solution& s){
   } 
 }
 
-Solution Pertubacao (Solution s){ 
+Solution Pertubacao (Solution s){  
 
   int subseqMax, aux;
   int subseq1, subseq2;
   int index1, index2;
   bool changed= false;
   int i, times;
-  
+
+
 
   if (dimension <= 20){
     subseq1= 2;
@@ -420,16 +418,12 @@ int main(int argc, char** argv) {
     }
     srand(time(0));
 
-
+   bestOfAll.custoSolucao= (double) INFINITY;
    maxIter= 50;
    for(i= 0; i < maxIter; i++){
       Construcao(s);
 
       bestS= s;
-
-      if(i == 0){
-        bestOfAll= s;
-      }
 
       count= 0;
       while(count < maxIterIls){
@@ -441,7 +435,7 @@ int main(int argc, char** argv) {
         }
         
         s= Pertubacao(bestS);   
-        cout << "best s" << bestS.custoSolucao << endl;
+        //cout << "best s" << bestS.custoSolucao << endl;
         count++;
       }
 
