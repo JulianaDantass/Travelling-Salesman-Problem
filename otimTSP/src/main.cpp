@@ -332,7 +332,6 @@ Solution Pertubacao (Solution s){
   int subseqMax, aux;
   int subseq1, subseq2;
   int index1, index2;
-  bool changed= false;
   int i, times;
 
 
@@ -352,8 +351,6 @@ Solution Pertubacao (Solution s){
       aux= subseq1;
       subseq1= subseq2;
       subseq2= aux;
-
-      changed= true;
     }
   }
  
@@ -404,8 +401,6 @@ Solution Pertubacao (Solution s){
     }
   }
 
-  
-
   return s;
 }
 
@@ -445,10 +440,6 @@ int main(int argc, char** argv) {
         }
         
         s= Pertubacao(bestS);   
-        // for(j= 0; j < s.sequence.size(); j++){
-        //   cout << s.sequence[j] << " ";
-        // } 
-        // cout << endl;
         count++;
       }
 
