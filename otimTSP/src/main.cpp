@@ -56,17 +56,11 @@ std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>
   return custoInsercao;
 }
 
-Solution Construcao(){
+Solution Construcao(std::vector<int> CL){
   
   int indexRandom, i, j;  
-  std::vector<int> CL;
   Solution s;
-
-
-  for(i= 2; i <= dimension; i++){ //comeca do 2 pq a c1 é adicionada logo apos
-    CL.push_back(i);
-  }
-
+  
   s.sequence.push_back(1);
   s.sequence.push_back(1);      //adicionando a c1 no inicio e no final
 
@@ -329,7 +323,7 @@ void BuscaLocal (Solution& s){
 
 Solution Pertubacao (Solution s){  
 
-  int subseqMax, aux;
+  int subseqMax;
   int subseq1, subseq2;
   int index1, index2;
   int i, times;
@@ -396,21 +390,24 @@ Solution Pertubacao (Solution s){
     times= large- small;
 
     i= 0;
-    while(times != 0){
+    if(changed){   
+        while(times != 0){
+          s.sequence.insert(s.sequence.begin() + index2 + subseq2, s.sequence[index1 + subseq2] );
+          s.sequence.erase(s.sequence.begin() + index1 + subseq2);
+          times--;
+          i++;
+        }
 
-      if(changed){   //subseq1 é maior
-        s.sequence.insert(s.sequence.begin() + index2 + subseq2, s.sequence[index1 + subseq2] );
-        s.sequence.erase(s.sequence.begin() + index1 + subseq2);
-        
-      }else{
-         s.sequence.insert(s.sequence.begin() + index1 + subseq1 + i, s.sequence[index2 + subseq1+i] );
-         s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
-         
-      }
-      times--;
-      i++;
+    }else{
+      while(times != 0){
+        s.sequence.insert(s.sequence.begin() + index1 + subseq1 + i, s.sequence[index2 + subseq1+i] );
+        s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
+        times--;
+        i++;
+      }  
+     }
+     
     }
-  }
 
   return s;
 }
@@ -422,6 +419,7 @@ int main(int argc, char** argv) {
     Solution s, bestS, bestOfAll;
     int maxIter, maxIterIls;
     int i, count, j;
+    std::vector<int> CL;
 
     readData(argc, argv, &dimension, &matrizAdj);
 
@@ -433,11 +431,15 @@ int main(int argc, char** argv) {
     }
     srand(time(NULL));
 
+    for(i= 2; i <= dimension; i++){ //comeca do 2 pq a c1 é adicionada na s.sequence na construcao
+      CL.push_back(i);
+    }
+
    bestOfAll.custoSolucao= (double) INFINITY;
    maxIter= 50;
    for(i= 0; i < maxIter; i++){
       
-      s= Construcao();
+      s= Construcao(CL);
 
       bestS= s;
 
@@ -453,7 +455,8 @@ int main(int argc, char** argv) {
         //   cout << s.sequence[j] << " ";
         // }
         // cout << endl;
-        s= Pertubacao(bestS);   
+          s= Pertubacao(bestS);  
+         
         // for(j= 0; j < s.sequence.size(); j++){
         //   cout << s.sequence[j] << " ";
         // }
