@@ -333,69 +333,80 @@ Solution Pertubacao (Solution s){
   int subseq1, subseq2;
   int index1, index2;
   int i, times;
-
+  int large, small;
+  bool changed= false;
 
   if (dimension <= 20){
     subseq1= 2;
     subseq2= 2;
 
+    large= subseq1;
+    small= subseq1;
   }else{
-     subseqMax= dimension / 10.0;
+     subseqMax= dimension / 10;
      subseqMax--;       //recurso utilizado para facilitar o uso do rand
 
      subseq1= rand() % subseqMax + 2;
      subseq2= rand() % subseqMax + 2;
-      
 
      if(subseq1 > subseq2){
-      aux= subseq1;
-      subseq1= subseq2;
-      subseq2= aux;
+      large= subseq1;
+      small= subseq2;
+      changed = true;
+    }else{
+      large= subseq2;
+      small= subseq1;
     }
   }
  
   while(1){
     index1= rand() % dimension + 1;
 
-    if(index1 <= dimension-subseq2-subseq1-1){
+    if(index1 <= dimension-subseq2-subseq1){
         break;
     }
-  }
+  }                                            
   while(1){
     index2= rand() % dimension;
 
-    if(index2 >= index1+subseq2 && index2 <= dimension-subseq2){
-        break;    
+    if(index2 >= index1+subseq1 && index2 <= dimension-subseq2){
+      break;
     }
   }
   
+  if( (index1 + subseq1) == index2 ){
+    s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2]]
+                                   - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]]
+                                   + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1]]
+                                   + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
+  }else{
+    s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index1+subseq1]]
+                                   - matrizAdj[s.sequence[index2-1]][s.sequence[index2]] - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]]
+                                   + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1+subseq1]]
+                                   + matrizAdj[s.sequence[index2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
+  }
 
-   if((index1 + subseq1) == index2){
-     s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2]] 
-                                    - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]] + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] 
-                                    + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
-
-   }else{
-     s.custoSolucao= s.custoSolucao - matrizAdj[s.sequence[index1-1]][s.sequence[index1]] - matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index1+subseq1]]
-                                    - matrizAdj[s.sequence[index2-1]][s.sequence[index2]] - matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index2+subseq2]]
-                                    + matrizAdj[s.sequence[index1-1]][s.sequence[index2]] + matrizAdj[s.sequence[index2+subseq2-1]][s.sequence[index1+subseq1]]
-                                    + matrizAdj[s.sequence[index2-1]][s.sequence[index1]] + matrizAdj[s.sequence[index1+subseq1-1]][s.sequence[index2+subseq2]];
-   }
-
-  for(i= 0; i < subseq1; i++){
+  for(i= 0; i < small; i++){
     std::swap(s.sequence[index1+i], s.sequence[index2+i]);
   }
 
 
   if(subseq1 != subseq2){
-    times= subseq2- subseq1;
+    
+    times= large- small;
 
     i= 0;
     while(times != 0){
-      s.sequence.insert(s.sequence.begin() + index1 + subseq1 + i, s.sequence[index2 + subseq1 + i] );
 
-      s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
-
+      if(changed){   //subseq1 é maior
+        s.sequence.insert(s.sequence.begin() + index2 + subseq2, s.sequence[index1 + subseq2] );
+        s.sequence.erase(s.sequence.begin() + index1 + subseq2);
+        
+      }else{
+         s.sequence.insert(s.sequence.begin() + index1 + subseq1 + i, s.sequence[index2 + subseq1+i] );
+         s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
+         
+      }
       times--;
       i++;
     }
@@ -420,7 +431,7 @@ int main(int argc, char** argv) {
     }else{
       maxIterIls= dimension;
     }
-    srand(time(0));
+    srand(time(NULL));
 
    bestOfAll.custoSolucao= (double) INFINITY;
    maxIter= 50;
@@ -438,8 +449,16 @@ int main(int argc, char** argv) {
           bestS= s;
           count= 0;
         }
-        
+        // for(j= 0; j < s.sequence.size(); j++){
+        //   cout << s.sequence[j] << " ";
+        // }
+        // cout << endl;
         s= Pertubacao(bestS);   
+        // for(j= 0; j < s.sequence.size(); j++){
+        //   cout << s.sequence[j] << " ";
+        // }
+        // cout << endl;
+        // cout << s.custoSolucao << endl;
         count++;
       }
 
@@ -449,7 +468,7 @@ int main(int argc, char** argv) {
     
    }
     cout << "melhor " << bestOfAll.custoSolucao << endl;
-    printData();
+    // printData();
 
     clock_t end= clock();
     double time= ((double) (end - start)) / CLOCKS_PER_SEC;
