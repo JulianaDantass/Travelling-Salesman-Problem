@@ -109,20 +109,21 @@ bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP
   double delta, bestDelta;
   int best_i, best_j;
   int i, j;
-  double changeCost;
+  double partialCost;
 
   bestDelta= 0;
   for(i= 1; i < s.sequence.size() - 2; i++) {
+
+    partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]];
+
     for (j= i + 1; j < s.sequence.size() - 1; j++){
       
       if(i == j-1){
-        changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
+        delta= -matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
       }else{
-        changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] - matrizAdj[s.sequence[j-1]][s.sequence[j]] 
-                                   + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i+1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]] + matrizAdj[s.sequence[i]][s.sequence[j-1]];
+        delta= partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] - matrizAdj[s.sequence[j-1]][s.sequence[j]] 
+                                + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i+1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]] + matrizAdj[s.sequence[i]][s.sequence[j-1]];
       }
- 
-      delta= changeCost - s.custoSolucao;
 
       if(delta < bestDelta){
         bestDelta= delta;
@@ -146,16 +147,18 @@ bool BestImprovement2Opt (Solution& s){         //estrutura de vizinhança: 2opt
   double delta, bestDelta= 0;
   int best_i, best_j;
   int i, j;
-  double changeCost;
+  double changeCost, partialCost;
 
 
-  for(i= 1; i < s.sequence.size() - 1; i++) {
+  for(i= 1; i < s.sequence.size() - 3; i++) {
+
+    partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]];
+
     for (j= i + 2; j < s.sequence.size() - 1; j++){
       
-      changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] 
-                                 + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
+      delta= partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] 
+                              + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
 
-      delta= changeCost - s.custoSolucao;
 
       if(delta < bestDelta){
         bestDelta= delta;
@@ -185,24 +188,25 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
   double delta, bestDelta= 0;
   int best_i, best_j;
   int i, j;
-  double changeCost;
+  double partialCost;
 
   switch(quantity){
     
     case 1:             //método: REINSERTION
 
       for(i= 1; i < s.sequence.size() - 1; i++) {
+
+        partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]]  + matrizAdj[s.sequence[i-1]][s.sequence[i+1]];
+
         for (j= i + 1; j < s.sequence.size() - 1; j++){
           
           if(i == j-1){
-            changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]]
+            delta= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]]
                                        + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
           }else{
-            changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] 
-                                     + matrizAdj[s.sequence[i-1]][s.sequence[i+1]] + matrizAdj[s.sequence[i]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
+            delta= partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] 
+                                    + matrizAdj[s.sequence[i]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
           }
-
-          delta= changeCost - s.custoSolucao;
 
           if(delta < bestDelta){
             bestDelta= delta;
@@ -222,13 +226,15 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
     case 2:          //método: OR-OPT-2
 
-      for(i= 1; i < s.sequence.size() - 1; i++) {
+      for(i= 1; i < s.sequence.size() - 3; i++) {
+
+        partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] + matrizAdj[s.sequence[i-1]][s.sequence[i+2]];
+
         for (j= i + 2; j < s.sequence.size() - 2; j++){
           
-          changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] - matrizAdj[s.sequence[j+1]][s.sequence[j+2]]
-                                     + matrizAdj[s.sequence[i-1]][s.sequence[i+2]] + matrizAdj[s.sequence[j+1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j+2]];
+          delta=  partialCost - matrizAdj[s.sequence[j+1]][s.sequence[j+2]]
+                                   + matrizAdj[s.sequence[j+1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j+2]];
 
-          delta= changeCost - s.custoSolucao;
 
           if(delta < bestDelta){
             bestDelta= delta;
@@ -250,13 +256,15 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
     case 3:      //método: OR-OPT-3
 
-      for(i= 1; i < s.sequence.size() - 1; i++) {
+      for(i= 1; i < s.sequence.size() - 4; i++) {
+
+        partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]] + matrizAdj[s.sequence[i-1]][s.sequence[i+3]];
+
         for (j= i + 3; j < s.sequence.size() - 3; j++){
 
-          changeCost= s.custoSolucao - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]] - matrizAdj[s.sequence[j+2]][s.sequence[j+3]]
-                                     + matrizAdj[s.sequence[i-1]][s.sequence[i+3]] + matrizAdj[s.sequence[j+2]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j+3]];
-          
-          delta= changeCost - s.custoSolucao; 
+          delta=  partialCost - matrizAdj[s.sequence[j+2]][s.sequence[j+3]]
+                              + matrizAdj[s.sequence[j+2]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j+3]];
+      
 
           if(delta < bestDelta){
             bestDelta= delta;
@@ -471,7 +479,7 @@ int main(int argc, char** argv) {
     
    }
     cout << "melhor " << bestOfAll.custoSolucao << endl;
-    // printData();
+    printData();
 
     clock_t end= clock();
     double time= ((double) (end - start)) / CLOCKS_PER_SEC;
