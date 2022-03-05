@@ -147,7 +147,7 @@ bool BestImprovement2Opt (Solution& s){         //estrutura de vizinhança: 2opt
   double delta, bestDelta= 0;
   int best_i, best_j;
   int i, j;
-  double changeCost, partialCost;
+  double partialCost;
 
 
   for(i= 1; i < s.sequence.size() - 3; i++) {
