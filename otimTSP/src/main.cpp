@@ -478,9 +478,9 @@ int main(int argc, char** argv) {
     }
     
    }
-    cout << "melhor " << bestOfAll.custoSolucao << endl;
     printData();
-
+    cout << "melhor " << bestOfAll.custoSolucao << endl;
+    
     clock_t end= clock();
     double time= ((double) (end - start)) / CLOCKS_PER_SEC;
 
