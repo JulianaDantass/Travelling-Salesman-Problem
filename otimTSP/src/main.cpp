@@ -112,7 +112,9 @@ int main(int argc, char** argv) {
 
     return 0;  
 
-}
+}  
+
+//------------------------------------------declarao das funcoes
 
 void printData() {
   cout << "dimension: " << dimension << endl;
@@ -129,13 +131,14 @@ bool compares(InsertionInfo a, InsertionInfo b){  //funcao auxiliar na ordenacao
 }
 
 
-std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>& CL){
+vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>& CL){
 
   std::vector<InsertionInfo> custoInsercao ((s.sequence.size()-1) * CL.size());
 
   int a, b, i, k;
   int count= 0;
   int l= 0;
+  
 
   for(int a= 0, b= 1; count < s.sequence.size() - 1; a++, b++){
     
@@ -203,7 +206,7 @@ Solution Construcao(vector<int> CL){
   }
   
   s.custoSolucao= 0;
-  for(i= 0; i < s.sequence.size()-1; i++){        //calcular o custo do tour solução
+  for(i= 0; i < dimension; i++){        //calcular o custo do tour solução
     s.custoSolucao += matrizAdj[s.sequence[i]][s.sequence[i+1]];        
   }
 
@@ -218,11 +221,11 @@ bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP
   double partialCost;
 
   bestDelta= 0;
-  for(i= 1; i < s.sequence.size() - 2; i++) {
+  for(i= 1; i < dimension - 1; i++) {
 
     partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]];
 
-    for (j= i + 1; j < s.sequence.size() - 1; j++){
+    for (j= i + 1; j < dimension; j++){
       
       if(i == j-1){
         delta= -matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
@@ -256,11 +259,11 @@ bool BestImprovement2Opt (Solution& s){         //estrutura de vizinhança: 2opt
   double partialCost;
 
 
-  for(i= 1; i < s.sequence.size() - 3; i++) {
+  for(i= 1; i < dimension - 2; i++) {
 
     partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]];
 
-    for (j= i + 2; j < s.sequence.size() - 1; j++){
+    for (j= i + 2; j < dimension; j++){
       
       delta= partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] 
                               + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
@@ -296,15 +299,16 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
   int i, j;
   double partialCost;
 
+
   switch(quantity){
     
     case 1:             //método: REINSERTION
 
-      for(i= 1; i < s.sequence.size() - 1; i++) {
+      for(i= 1; i < dimension; i++) {
 
         partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]]  + matrizAdj[s.sequence[i-1]][s.sequence[i+1]];
 
-        for (j= i + 1; j < s.sequence.size() - 1; j++){
+        for (j= i + 1; j < dimension; j++){
           
           if(i == j-1){
             delta= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]]
@@ -333,11 +337,11 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
     case 2:          //método: OR-OPT-2
 
-      for(i= 1; i < s.sequence.size() - 3; i++) {
+      for(i= 1; i < dimension- 2; i++) {
 
         partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] + matrizAdj[s.sequence[i-1]][s.sequence[i+2]];
 
-        for (j= i + 2; j < s.sequence.size() - 2; j++){
+        for (j= i + 2; j < dimension- 1; j++){
           
           delta=  partialCost - matrizAdj[s.sequence[j+1]][s.sequence[j+2]]
                                    + matrizAdj[s.sequence[j+1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j+2]];
@@ -364,11 +368,11 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
     case 3:      //método: OR-OPT-3
 
-      for(i= 1; i < s.sequence.size() - 4; i++) {
+      for(i= 1; i < dimension - 3; i++) {
 
         partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]] + matrizAdj[s.sequence[i-1]][s.sequence[i+3]];
 
-        for (j= i + 3; j < s.sequence.size() - 3; j++){
+        for (j= i + 3; j < dimension - 2; j++){
 
           delta=  partialCost - matrizAdj[s.sequence[j+2]][s.sequence[j+3]]
                               + matrizAdj[s.sequence[j+2]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j+3]];
@@ -404,7 +408,7 @@ void BuscaLocal (Solution& s){
   vector<int>NL= {1, 2, 3, 4, 5};
   bool improved= false;
   
-  while(NL.empty() == false){
+  while(!NL.empty()){
     
     int n= rand() % NL.size();
 
@@ -499,14 +503,13 @@ Solution Pertubacao (Solution s){
     swap(s.sequence[index1+i], s.sequence[index2+i]);
   }
 
-
   if(subseq1 != subseq2){
     
     times= large- small;
 
     i= 0;
     if(changed){   
-        while(times != 0){
+        while(times){
           s.sequence.insert(s.sequence.begin() + index2 + subseq2, s.sequence[index1 + subseq2] );
           s.sequence.erase(s.sequence.begin() + index1 + subseq2);
           times--;
@@ -514,7 +517,7 @@ Solution Pertubacao (Solution s){
         }
 
     }else{
-      while(times != 0){
+      while(times){
         s.sequence.insert(s.sequence.begin() + index1 + subseq1 + i, s.sequence[index2 + subseq1+i] );
         s.sequence.erase(s.sequence.begin() + index2 + subseq1 + i+1);
         times--;
