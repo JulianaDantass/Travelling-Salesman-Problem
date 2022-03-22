@@ -215,12 +215,13 @@ Solution Construcao(vector<int> CL){
 
 bool BestImprovementSwap (Solution& s){         //estrutura de vizinhança: SWAP 
 
-  double delta, bestDelta;
+  double delta;
+  double bestDelta= 0;
   int best_i, best_j;
   int i, j;
   double partialCost;
 
-  bestDelta= 0;
+
   for(i= 1; i < dimension - 1; i++) {
 
     partialCost= - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]];
