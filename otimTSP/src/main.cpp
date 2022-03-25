@@ -30,7 +30,7 @@ bool compares(InsertionInfo a, InsertionInfo b);
 
 std:: vector<InsertionInfo> calcularCustoInsercao (Solution& s, vector<int>& CL);
 
-Solution Construcao(vector<int> CL);
+Solution Construcao(vector<int>& CL);
 
 bool BestImprovementSwap (Solution& s);
 
@@ -49,7 +49,8 @@ int main(int argc, char** argv) {
     Solution s, bestS, bestOfAll;
     int maxIter, maxIterIls;
     int i, count, j;
-    vector<int> CL;
+    vector<int> CL;    
+    vector<int> CL2; 
 
     readData(argc, argv, &dimension, &matrizAdj);
 
@@ -69,7 +70,9 @@ int main(int argc, char** argv) {
    maxIter= 50;
    for(i= 0; i < maxIter; i++){
       
-      s= Construcao(CL);
+      
+      CL2= CL;
+      s= Construcao(CL2);
 
       bestS= s;
 
@@ -158,10 +161,12 @@ vector<InsertionInfo> calcularCustoInsercao (Solution& s, std::vector<int>& CL){
   return custoInsercao;
 }
 
-Solution Construcao(vector<int> CL){
+Solution Construcao(vector<int>& CL){
   
   int indexRandom, i, j;  
   Solution s;
+
+   s.custoSolucao= 0;             //zerando o custo da solucao
   
   s.sequence.push_back(1);
   s.sequence.push_back(1);      //adicionando a c1 no inicio e no final
@@ -180,6 +185,9 @@ Solution Construcao(vector<int> CL){
     indexRandom= rand() % CL.size();
     s.sequence.insert(s.sequence.end()-1, CL[indexRandom]);
     CL.erase(CL.begin() + indexRandom);
+
+    s.custoSolucao= matrizAdj[s.sequence[0]][s.sequence[1]] + matrizAdj[s.sequence[1]][s.sequence[2]] + matrizAdj[s.sequence[2]][s.sequence[3]] + 
+                    matrizAdj[s.sequence[3]][s.sequence[4]];
 
     //
 
@@ -203,11 +211,8 @@ Solution Construcao(vector<int> CL){
       j++;
     }
 
-  }
-  
-  s.custoSolucao= 0;
-  for(i= 0; i < dimension; i++){        //calcular o custo do tour solução
-    s.custoSolucao += matrizAdj[s.sequence[i]][s.sequence[i+1]];        
+    s.custoSolucao += custoInsercao[selecionado].custo;
+
   }
 
   return s;
