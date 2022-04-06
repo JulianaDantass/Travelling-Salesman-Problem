@@ -108,10 +108,10 @@ int main(int argc, char** argv) {
     // printData();
     clock_t end= clock(); 
 
-    cout << "melhor " << bestOfAll.custoSolucao << endl;
+    cout << "COST: " << bestOfAll.custoSolucao << endl;
     double time= ((double) (end - start)) / CLOCKS_PER_SEC;
 
-    cout << "tempo " << time << endl;   //imprime o tempo total de execucao
+    cout << "TIME: " << time << endl;   //imprime o tempo total de execucao
     
 
     return 0;  
@@ -496,7 +496,7 @@ Solution Pertubacao (Solution s){
     }
   }                                            
   while(1){
-    index2= rand() % dimension + index1 + subseq1;      //pq o index2 tem q ser sorteado a partir do indice index1+subseq1; //////
+    index2= rand() % dimension + index1 + subseq1;      //pq o index2 tem q ser sorteado a partir do indice index1+subseq1;
 
     if(index2 <= dimension-subseq2){
       break;

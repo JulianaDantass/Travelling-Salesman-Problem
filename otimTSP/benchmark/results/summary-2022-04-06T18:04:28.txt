@@ -1,0 +1,20 @@
+instances/att48.tsp --- Optimal!
+instances/bayg29.tsp --- Optimal!
+instances/bays29.tsp --- Optimal!
+instances/burma14.tsp --- Optimal!
+instances/dantzig42.tsp --- Optimal!
+instances/fri26.tsp --- Optimal!
+instances/gr17.tsp --- Optimal!
+instances/gr21.tsp --- Optimal!
+instances/gr24.tsp --- Optimal!
+instances/gr48.tsp --- Optimal!
+instances/hk48.tsp --- Optimal!
+instances/swiss42.tsp --- Optimal!
+instances/ulysses16.tsp --- Optimal!
+instances/ulysses22.tsp --- Optimal!
+
+TOTAL COUNT
+Optimal: 14
+Good: 0
+Needs improvement: 0
+Not found: 0
