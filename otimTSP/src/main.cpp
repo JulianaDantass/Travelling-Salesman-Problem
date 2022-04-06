@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
     vector<int> CL;    
     vector<int> CL2; 
 
-    readData(argc, argv, &dimension, &matrizAdj);
+    readData(argc, argv, &dimension, &matrizAdj); ///////iureire
 
 
     if(dimension <= 150){
