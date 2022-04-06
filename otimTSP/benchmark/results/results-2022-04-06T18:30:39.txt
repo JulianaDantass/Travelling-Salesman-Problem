@@ -1,0 +1,132 @@
+instances/berlin52.tsp
+Avg cost: 7542.0
+Avg time: 0.12683439999999999
+Off percentage: 0.0%
+
+instances/bier127.tsp
+Avg cost: 118282.0
+Avg time: 3.148587
+Off percentage: 0.0%
+
+instances/brazil58.tsp
+Avg cost: 25395.0
+Avg time: 0.1692988
+Off percentage: 0.0%
+
+instances/ch130.tsp
+Avg cost: 6110.0
+Avg time: 3.238125
+Off percentage: 0.0%
+
+instances/ch150.tsp
+Avg cost: 6528.0
+Avg time: 4.919285
+Off percentage: 0.0%
+
+Couldn't find optimal data for instances/eil101.tsp
+
+instances/eil51.tsp
+Avg cost: 426.0
+Avg time: 0.12253269999999998
+Off percentage: 0.0%
+
+instances/eil76.tsp
+Avg cost: 538.0
+Avg time: 0.4502692
+Off percentage: 0.0%
+
+instances/gr120.tsp
+Avg cost: 6942.0
+Avg time: 2.678652
+Off percentage: 0.0%
+
+instances/gr137.tsp
+Avg cost: 69853.0
+Avg time: 3.5025199999999996
+Off percentage: 0.0%
+
+instances/gr96.tsp
+Avg cost: 55209.0
+Avg time: 1.0340087
+Off percentage: 0.0%
+
+instances/kroA100.tsp
+Avg cost: 21282.0
+Avg time: 1.1107080000000003
+Off percentage: 0.0%
+
+instances/kroA150.tsp
+Avg cost: 26524.0
+Avg time: 5.291983999999999
+Off percentage: 0.0%
+
+instances/kroB100.tsp
+Avg cost: 22141.0
+Avg time: 1.216841
+Off percentage: 0.0%
+
+instances/kroB150.tsp
+Avg cost: 26130.0
+Avg time: 5.19084
+Off percentage: 0.0%
+
+instances/kroC100.tsp
+Avg cost: 20749.0
+Avg time: 1.132263
+Off percentage: 0.0%
+
+instances/kroD100.tsp
+Avg cost: 21294.0
+Avg time: 1.235061
+Off percentage: 0.0%
+
+instances/kroE100.tsp
+Avg cost: 22068.0
+Avg time: 1.22403
+Off percentage: 0.0%
+
+instances/lin105.tsp
+Avg cost: 14379.0
+Avg time: 1.286979
+Off percentage: 0.0%
+
+instances/pr107.tsp
+Avg cost: 44303.0
+Avg time: 1.423451
+Off percentage: 0.0%
+
+instances/pr124.tsp
+Avg cost: 59030.0
+Avg time: 2.083583
+Off percentage: 0.0%
+
+instances/pr136.tsp
+Avg cost: 96772.9
+Avg time: 3.822579
+Off percentage: 0.0009300210804718092%
+
+instances/pr144.tsp
+Avg cost: 58537.0
+Avg time: 3.3781130000000004
+Off percentage: 0.0%
+
+instances/pr76.tsp
+Avg cost: 108159.0
+Avg time: 0.44563309999999995
+Off percentage: 0.0%
+
+instances/rat99.tsp
+Avg cost: 1211.0
+Avg time: 1.171173
+Off percentage: 0.0%
+
+instances/rd100.tsp
+Avg cost: 7910.0
+Avg time: 1.2169109999999999
+Off percentage: 0.0%
+
+instances/st70.tsp
+Avg cost: 675.0
+Avg time: 0.33450690000000005
+Off percentage: 0.0%
+
