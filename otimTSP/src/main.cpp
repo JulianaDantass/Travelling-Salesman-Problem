@@ -106,12 +106,12 @@ int main(int argc, char** argv) {
     
    }
     // printData();
-    cout << "melhor " << bestOfAll.custoSolucao << endl;
+    cout << "COST " << bestOfAll.custoSolucao << endl;
     
     clock_t end= clock();
     double time= ((double) (end - start)) / CLOCKS_PER_SEC;
 
-    cout << "tempo: " << time << endl;   //imprime o tempo total de execucao
+    cout << "TIME " << time << endl;   //imprime o tempo total de execucao
 
     return 0;  
 
