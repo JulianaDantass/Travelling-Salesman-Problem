@@ -42,6 +42,18 @@ void BuscaLocal (Solution& s);
 
 Solution Pertubacao (Solution s);
 
+
+double calcCost(vector<int> vec) {
+
+  double total = 0;
+
+  for (int i =0; i < dimension; i++) {
+    total += matrizAdj[vec[i]][vec[i+1]];
+  }
+
+  return total;
+}
+
 int main(int argc, char** argv) {
 
     clock_t start= clock();    //inicia a contagem do tempo de execucao  
@@ -355,7 +367,8 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
         }
         
         s.custoSolucao= s.custoSolucao + bestDelta;
-        
+
+
         return true;
       }
       return false;
@@ -368,19 +381,16 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
         for (j= 1; j < dimension- 1; j++){
           
-          if(j == i){
-            
-            continue;   
-
-          }else if(j < i){
+          if(j < i){
 
             delta= -matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] 
                    +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j]] + matrizAdj[s.sequence[i-1]][s.sequence[i+2]];
 
-          }else{
+          }else if(j > i) {
 
             delta=  partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[j]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j+1]];
-          }
+          } else 
+            continue;
 
 
           if(delta < bestDelta){
@@ -421,19 +431,16 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
         for (j= 1; j < dimension - 2; j++){
 
-          if(i == j){
-
-            continue;
-
-          }else if(j < i){
+          if(j < i){
 
             delta= -matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]]
                    +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j]] + matrizAdj[s.sequence[i-1]][s.sequence[i+3]];
 
-          }else{
+          }else if(j > i) {
 
             delta=  partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[j]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j+1]];
-          }
+          } else
+            continue;
 
 
           if(delta < bestDelta){
@@ -495,10 +502,10 @@ void BuscaLocal (Solution& s){
         improved= BestImprovementOrOpt(s, 1);   //reinsertion    
         break;
       case 4:
-        improved= BestImprovementOrOpt(s, 2);   //Or-opt2      
+        // improved= BestImprovementOrOpt(s, 2);   //Or-opt2      
         break;
       case 5:
-        improved= BestImprovementOrOpt(s, 3);   //Or-opt3      
+        // improved= BestImprovementOrOpt(s, 3);   //Or-opt3      
         break;
     }
     
