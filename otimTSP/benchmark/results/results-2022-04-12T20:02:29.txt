@@ -1,0 +1,15 @@
+instances/burma14.tsp
+Avg cost: 0.0
+Avg time: 0.0
+Off percentage: -100.0%
+
+instances/gr17.tsp
+Avg cost: 0.0
+Avg time: 0.0
+Off percentage: -100.0%
+
+instances/ulysses16.tsp
+Avg cost: 0.0
+Avg time: 0.0
+Off percentage: -100.0%
+
