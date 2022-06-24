@@ -43,17 +43,6 @@ void BuscaLocal (Solution& s);
 Solution Pertubacao (Solution s);
 
 
-double calcCost(vector<int> vec) {
-
-  double total = 0;
-
-  for (int i =0; i < dimension; i++) {
-    total += matrizAdj[vec[i]][vec[i+1]];
-  }
-
-  return total;
-}
-
 int main(int argc, char** argv) {
 
     clock_t start= clock();    //inicia a contagem do tempo de execucao  
@@ -328,21 +317,19 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
         for (j= 1; j < dimension; j++){
 
-          if(j == 1){
+          if(j < i){
 
-            continue;
-
-          } else if(j < i){
-
-            delta= - matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i]][s.sequence[i+1]] 
-                     + matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i]][s.sequence[j+1]] + matrizAdj[s.sequence[i-1]][s.sequence[i+1]];
+            delta= partialCost - matrizAdj[s.sequence[j-1]][s.sequence[j]]
+                     + matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i]][s.sequence[j]];
 
           }else if(i == j-1){
             delta= -matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[j]][s.sequence[j+1]]
                                        + matrizAdj[s.sequence[i-1]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
-          }else{
+          }else if(i < j){
             delta= partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] 
                                     + matrizAdj[s.sequence[i]][s.sequence[j]] + matrizAdj[s.sequence[i]][s.sequence[j+1]];
+          }else{
+            continue;
           }
 
           if(delta < bestDelta){
@@ -452,7 +439,7 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
         
       }
 
-      if (bestDelta < 0){
+      if (bestDelta < 0){   //inserindo depois do j
 
          if(best_j > best_i){
 
@@ -463,7 +450,7 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
           s.sequence.erase(s.sequence.begin() + (best_i + 1));
           s.sequence.erase(s.sequence.begin() + best_i);
 
-        }else{
+        }else{    
 
           s.sequence.insert(s.sequence.begin() + best_j, s.sequence[best_i]);
           s.sequence.insert(s.sequence.begin() + best_j + 1, s.sequence[best_i+2]);
@@ -499,7 +486,7 @@ void BuscaLocal (Solution& s){
         improved= BestImprovement2Opt(s);  
         break;
       case 3:
-        improved= BestImprovementOrOpt(s, 1);   //reinsertion    
+        improved= BestImprovementOrOpt(s, 1);   //reinsertion        //corrigido!
         break;
       case 4:
         // improved= BestImprovementOrOpt(s, 2);   //Or-opt2      

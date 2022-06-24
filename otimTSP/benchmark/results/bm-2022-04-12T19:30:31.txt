@@ -1,4 +1,0 @@
-instances/burma14.tsp
-instances/gr17.tsp
-instances/ulysses16.tsp
--

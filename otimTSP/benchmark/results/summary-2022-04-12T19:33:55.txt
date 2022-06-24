@@ -1,9 +1,0 @@
-instances/burma14.tsp --- Optimal!
-instances/gr17.tsp --- Optimal!
-instances/ulysses16.tsp --- Optimal!
-
-TOTAL COUNT
-Optimal: 3
-Good: 0
-Needs improvement: 0
-Not found: 0
