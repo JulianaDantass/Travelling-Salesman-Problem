@@ -362,20 +362,26 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
     case 2:          //método: OR-OPT-2
 
+      
+
       for(i= 1; i < dimension- 2; i++) {
 
         partialCost= -matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] + matrizAdj[s.sequence[i-1]][s.sequence[i+2]];
 
         for (j= 1; j < dimension- 1; j++){
-          
-          if(j < i){
+
+          if(j == i+1){
+
+            continue;
+
+          }else if(j < i){
 
             delta= -matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] 
                    +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j]] + matrizAdj[s.sequence[i-1]][s.sequence[i+2]];
 
           }else if(j > i) {
 
-            delta=  partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[j]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j+1]];
+            delta=  partialCost - matrizAdj[s.sequence[j]][s.sequence[j+1]] + matrizAdj[s.sequence[i]][s.sequence[j]] + matrizAdj[s.sequence[i+1]][s.sequence[j+1]];
           } else 
             continue;
 
@@ -395,6 +401,7 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
           s.sequence.insert(s.sequence.begin() + best_j + 2, s.sequence[best_i+1]);
           s.sequence.erase(s.sequence.begin() + (best_i + 1));
           s.sequence.erase(s.sequence.begin() + best_i);
+
         
         }else{
 
@@ -417,8 +424,11 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
         partialCost= -matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]] + matrizAdj[s.sequence[i-1]][s.sequence[i+3]];
 
         for (j= 1; j < dimension - 2; j++){
+          
+          if(j == i+1 || j== i+2){
+            continue;
 
-          if(j < i){
+          }else if(j < i){
 
             delta= -matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]]
                    +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j]] + matrizAdj[s.sequence[i-1]][s.sequence[i+3]];
@@ -489,10 +499,10 @@ void BuscaLocal (Solution& s){
         improved= BestImprovementOrOpt(s, 1);   //reinsertion        //corrigido!
         break;
       case 4:
-        // improved= BestImprovementOrOpt(s, 2);   //Or-opt2      
+        improved= BestImprovementOrOpt(s, 2);   //Or-opt2      
         break;
       case 5:
-        // improved= BestImprovementOrOpt(s, 3);   //Or-opt3      
+        improved= BestImprovementOrOpt(s, 3);   //Or-opt3      
         break;
     }
     
