@@ -376,8 +376,8 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
           }else if(j < i){
 
-            delta= -matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+1]][s.sequence[i+2]] 
-                   +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j]] + matrizAdj[s.sequence[i-1]][s.sequence[i+2]];
+            delta= partialCost -matrizAdj[s.sequence[j-1]][s.sequence[j]]
+                   +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+1]][s.sequence[j]];
 
           }else if(j > i) {
 
@@ -430,8 +430,8 @@ bool BestImprovementOrOpt (Solution& s, int quantity){   //as 3 outras estrutura
 
           }else if(j < i){
 
-            delta= -matrizAdj[s.sequence[j-1]][s.sequence[j]] - matrizAdj[s.sequence[i-1]][s.sequence[i]] - matrizAdj[s.sequence[i+2]][s.sequence[i+3]]
-                   +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j]] + matrizAdj[s.sequence[i-1]][s.sequence[i+3]];
+            delta= partialCost -matrizAdj[s.sequence[j-1]][s.sequence[j]]
+                   +matrizAdj[s.sequence[j-1]][s.sequence[i]] + matrizAdj[s.sequence[i+2]][s.sequence[j]];
 
           }else if(j > i) {
 
