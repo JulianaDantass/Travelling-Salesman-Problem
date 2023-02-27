@@ -1,2 +1,2 @@
-# otimTSP
+# Travelling Salesman Problem (TSP)
  
